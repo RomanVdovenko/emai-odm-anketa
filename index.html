@@ -25,9 +25,10 @@
     <div class="progress-bar-track"><div class="progress-bar-fill"></div></div>
   </div>
   <div class="header-actions">
+    <button id="btn-admin"    class="btn btn-admin btn-sm">⚙ Admin</button>
     <button id="btn-glossary" class="btn btn-glossary btn-sm">📖 Глоссарий</button>
-    <button id="btn-export"   class="btn btn-outline btn-sm">↑ JSON</button>
-    <button id="btn-import"   class="btn btn-ghost btn-sm">↓ JSON</button>
+    <button id="btn-export"   class="btn btn-outline btn-sm">↓ JSON</button>
+    <button id="btn-import"   class="btn btn-ghost btn-sm">↑ JSON</button>
     <button id="btn-print"    class="btn btn-ghost btn-sm">🖨</button>
     <button id="btn-reset"    class="btn btn-ghost btn-sm" style="color:var(--red)">✕ Сброс</button>
   </div>
@@ -1791,25 +1792,10 @@
         </select>
       </div>
     </div>
-    <div class="form-grid-3 mt-16">
-      <div class="signature-field">
-        <label>Имя участника 1</label>
-        <input type="text" data-field="sig1_name" class="signature-line" placeholder="Имя Фамилия">
-        <label style="margin-top:6px">Роль</label>
-        <input type="text" data-field="sig1_role" class="signature-line" placeholder="Роль в проекте">
-      </div>
-      <div class="signature-field">
-        <label>Имя участника 2</label>
-        <input type="text" data-field="sig2_name" class="signature-line" placeholder="Имя Фамилия">
-        <label style="margin-top:6px">Роль</label>
-        <input type="text" data-field="sig2_role" class="signature-line" placeholder="Роль в проекте">
-      </div>
-      <div class="signature-field">
-        <label>Имя участника 3</label>
-        <input type="text" data-field="sig3_name" class="signature-line" placeholder="Имя Фамилия">
-        <label style="margin-top:6px">Роль</label>
-        <input type="text" data-field="sig3_role" class="signature-line" placeholder="Роль в проекте">
-      </div>
+    <div class="mt-16">
+      <label class="form-label">Участники сессии</label>
+      <div id="participants-list" class="participants-list"></div>
+      <button id="btn-add-participant" class="btn btn-ghost btn-sm btn-add-participant" type="button">＋ Добавить участника</button>
     </div>
     <div class="textarea-wrap mt-16">
       <label class="form-label">Общие решения и следующие шаги</label>

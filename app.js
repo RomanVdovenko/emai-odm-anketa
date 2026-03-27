@@ -1,7 +1,8 @@
 /* ============================================================
    EMAI ODM Анкета v3.6 — JavaScript
    Логика: автосохранение, export/import JSON, прогресс,
-           глоссарий, слайдеры, accept/change toggle
+           глоссарий, стeppers, accept/change toggle,
+           участники (динамические), admin-панель
    ============================================================ */
 
 'use strict';
@@ -36,14 +37,35 @@ function timestamp() {
    ========================================================= */
 
 function collectFormData() {
-  const data = { _version: VERSION, _saved: new Date().toISOString(), fields: {} };
+  const data = {
+    _version: VERSION,
+    _saved: new Date().toISOString(),
+    participants: [],
+    sectionLabels: {},
+    fields: {}
+  };
 
+  // Поля формы
   document.querySelectorAll('[data-field]').forEach(el => {
     const key = el.dataset.field;
-    if (el.type === 'checkbox')      data.fields[key] = el.checked;
-    else if (el.type === 'radio')    { if (el.checked) data.fields[key] = el.value; }
-    else                             data.fields[key] = el.value;
+    if (el.type === 'checkbox')   data.fields[key] = el.checked;
+    else if (el.type === 'radio') { if (el.checked) data.fields[key] = el.value; }
+    else                          data.fields[key] = el.value;
   });
+
+  // Метки разделов (для читаемости JSON)
+  document.querySelectorAll('.section-card[id]').forEach(card => {
+    const titleEl = card.querySelector('.section-title');
+    data.sectionLabels[card.id] = titleEl ? titleEl.textContent.trim() : '';
+  });
+
+  // Участники
+  document.querySelectorAll('#participants-list .participant-row').forEach(row => {
+    const name = row.querySelector('.participant-name')?.value || '';
+    const role = row.querySelector('.participant-role')?.value || '';
+    data.participants.push({ name, role });
+  });
+
   return data;
 }
 
@@ -65,6 +87,17 @@ function restoreFormData(data) {
       el.dispatchEvent(new Event('input'));
     }
   });
+
+  // Восстановить участников
+  if (data.participants && data.participants.length) {
+    const list = document.getElementById('participants-list');
+    if (list) {
+      list.innerHTML = '';
+      data.participants.forEach(p => {
+        list.appendChild(_createParticipantRow(p.name || '', p.role || ''));
+      });
+    }
+  }
 
   updateProgress();
 }
@@ -97,7 +130,7 @@ function exportJSON() {
   a.download = `EMAI_ODM_Spec_${timestamp()}.json`;
   a.click();
   URL.revokeObjectURL(url);
-  showToast('JSON сохранён', '💾');
+  showToast('JSON скачан', '💾');
 }
 
 function importJSON() {
@@ -139,7 +172,7 @@ function updateProgress() {
 
   let filled = 0;
   required.forEach(el => {
-    if (el.type === 'checkbox') { /* checkboxes не обязательны */ return; }
+    if (el.type === 'checkbox') { return; }
     if (el.type === 'radio') {
       const name = el.name;
       if (document.querySelector(`input[name="${name}"]:checked`)) filled++;
@@ -148,7 +181,6 @@ function updateProgress() {
     if (el.value && el.value.trim()) filled++;
   });
 
-  // Считаем уникальные radio-группы
   const radioGroups = new Set();
   required.forEach(el => { if (el.type === 'radio') radioGroups.add(el.name); });
 
@@ -164,7 +196,7 @@ function updateProgress() {
 }
 
 /* =========================================================
-   СЛАЙДЕРЫ — обновление отображения значения
+   СТЕППЕРЫ
    ========================================================= */
 
 function initSteppers() {
@@ -270,7 +302,7 @@ function initNavHighlight() {
 }
 
 /* =========================================================
-   ГЛОССАРИЙ — открытие/закрытие, поиск, прокрутка к термину
+   ГЛОССАРИЙ
    ========================================================= */
 
 function initGlossary() {
@@ -309,7 +341,6 @@ function initGlossary() {
   if (closeBtn) closeBtn.addEventListener('click', closeGlossary);
   overlay.addEventListener('click', e => { if (e.target === overlay) closeGlossary(); });
 
-  // Клик по кликабельным терминам в тексте
   document.querySelectorAll('a.term-link').forEach(link => {
     link.addEventListener('click', e => {
       e.preventDefault();
@@ -317,7 +348,6 @@ function initGlossary() {
     });
   });
 
-  // Поиск
   if (searchInput) {
     searchInput.addEventListener('input', () => {
       const q = searchInput.value.toLowerCase();
@@ -327,7 +357,6 @@ function initGlossary() {
     });
   }
 
-  // Экспортируем функцию глобально (используется из onclick в HTML)
   window.openGlossary = openGlossary;
 }
 
@@ -348,6 +377,207 @@ function initMobileNav() {
     item.addEventListener('click', () => {
       if (window.innerWidth < 768) sidebar.classList.remove('open');
     });
+  });
+}
+
+/* =========================================================
+   УЧАСТНИКИ — динамический список
+   ========================================================= */
+
+function _createParticipantRow(name, role) {
+  const row = document.createElement('div');
+  row.className = 'participant-row';
+  row.innerHTML = `
+    <input type="text" class="participant-name signature-line" placeholder="Имя Фамилия">
+    <input type="text" class="participant-role signature-line" placeholder="Роль в проекте">
+    <button class="participant-remove" type="button" title="Убрать участника">−</button>
+  `;
+  const nameInput = row.querySelector('.participant-name');
+  const roleInput = row.querySelector('.participant-role');
+  nameInput.value = name || '';
+  roleInput.value = role || '';
+
+  nameInput.addEventListener('input', autoSave);
+  roleInput.addEventListener('input', autoSave);
+
+  row.querySelector('.participant-remove').addEventListener('click', () => {
+    row.remove();
+    autoSave();
+  });
+  return row;
+}
+
+function initParticipants() {
+  const list   = document.getElementById('participants-list');
+  const addBtn = document.getElementById('btn-add-participant');
+  if (!list || !addBtn) return;
+
+  // Начальная строка
+  list.appendChild(_createParticipantRow('', ''));
+
+  addBtn.addEventListener('click', () => {
+    const row = _createParticipantRow('', '');
+    list.appendChild(row);
+    row.querySelector('.participant-name').focus();
+    autoSave();
+  });
+}
+
+/* =========================================================
+   ADMIN-ПАНЕЛЬ
+   ========================================================= */
+
+function initAdminPanel() {
+  const toggleBtn = document.getElementById('btn-admin');
+  if (!toggleBtn) return;
+
+  let customCount = 0;
+
+  // Открыть модалку редактирования раздела
+  function openEditModal(card) {
+    const titleEl    = card.querySelector('.section-title');
+    const subtitleEl = card.querySelector('.section-subtitle');
+
+    document.getElementById('admin-edit-overlay')?.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'admin-edit-overlay';
+    overlay.className = 'admin-edit-overlay';
+    overlay.innerHTML = `
+      <div class="admin-edit-inner">
+        <div class="admin-edit-title">Редактирование раздела</div>
+        <label class="form-label">Заголовок</label>
+        <input type="text" id="aei-heading" value="${(titleEl?.textContent || '').trim().replace(/"/g, '&quot;')}">
+        <label class="form-label" style="margin-top:10px">Подзаголовок</label>
+        <input type="text" id="aei-sub" value="${(subtitleEl?.textContent || '').trim().replace(/"/g, '&quot;')}">
+        <div class="admin-edit-actions">
+          <button id="aei-save"   class="btn btn-primary btn-sm">Сохранить</button>
+          <button id="aei-cancel" class="btn btn-ghost btn-sm">Отмена</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const headingInput = overlay.querySelector('#aei-heading');
+    headingInput.focus();
+    headingInput.select();
+
+    overlay.querySelector('#aei-save').addEventListener('click', () => {
+      const newHeading = overlay.querySelector('#aei-heading').value.trim();
+      const newSub     = overlay.querySelector('#aei-sub').value.trim();
+      if (titleEl && newHeading) {
+        // Сохраняем ссылки на глоссарий — заменяем только текстовые узлы
+        titleEl.childNodes.forEach(node => {
+          if (node.nodeType === Node.TEXT_NODE) node.textContent = '';
+        });
+        // Если нет дочерних элементов — просто ставим текст
+        if (!titleEl.querySelector('a')) {
+          titleEl.textContent = newHeading;
+        } else {
+          // Вставляем текст перед первой ссылкой
+          titleEl.insertBefore(document.createTextNode(newHeading + ' '), titleEl.firstChild);
+        }
+      }
+      if (subtitleEl) subtitleEl.textContent = newSub;
+      overlay.remove();
+      autoSave();
+    });
+    overlay.querySelector('#aei-cancel').addEventListener('click', () => overlay.remove());
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+  }
+
+  // Добавить комментарий-тоггл для новых разделов
+  function bindCommentToggle(card) {
+    card.querySelectorAll('.comment-toggle').forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const area = toggle.nextElementSibling;
+        if (!area) return;
+        const open = area.classList.toggle('visible');
+        toggle.textContent = open ? '▲ Скрыть комментарий' : '▼ Добавить комментарий';
+      });
+    });
+  }
+
+  // Создать и добавить admin-bar к карточке
+  function attachAdminBar(card, isCustom) {
+    const bar = document.createElement('div');
+    bar.className = 'admin-bar';
+    bar.innerHTML = `
+      <button class="admin-btn admin-btn-edit"  title="Редактировать заголовок">✎</button>
+      <button class="admin-btn admin-btn-hide"  title="Скрыть/показать раздел">👁</button>
+      <button class="admin-btn admin-btn-after" title="Добавить раздел после">＋</button>
+      ${isCustom ? '<button class="admin-btn admin-btn-delete" title="Удалить раздел">✕</button>' : ''}
+    `;
+    card.appendChild(bar);
+
+    bar.querySelector('.admin-btn-edit').addEventListener('click', () => openEditModal(card));
+
+    bar.querySelector('.admin-btn-hide').addEventListener('click', () => {
+      card.classList.toggle('section-hidden');
+      const isHidden = card.classList.contains('section-hidden');
+      bar.querySelector('.admin-btn-hide').style.cssText = isHidden
+        ? 'background:#fce8e6;color:var(--red);border-color:var(--red)'
+        : '';
+      autoSave();
+    });
+
+    bar.querySelector('.admin-btn-after').addEventListener('click', () => addCustomSection(card));
+
+    if (isCustom) {
+      bar.querySelector('.admin-btn-delete').addEventListener('click', () => {
+        if (confirm('Удалить этот раздел?')) { card.remove(); autoSave(); }
+      });
+    }
+  }
+
+  // Добавить новый кастомный раздел после указанного
+  function addCustomSection(afterCard) {
+    customCount++;
+    const id = 'custom_' + customCount;
+
+    const card = document.createElement('div');
+    card.className = 'section-card custom-section';
+    card.id = id;
+    card.style.position = 'relative';
+    card.innerHTML = `
+      <div class="section-header">
+        <div class="section-num" style="background:#e8f5e9;color:#2e7d32">＋</div>
+        <div class="section-title-block">
+          <div class="section-title">Новый вопрос</div>
+          <div class="section-subtitle">Нажмите ✎ чтобы изменить заголовок</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <textarea data-field="${id}_value" rows="3" placeholder="Введите ответ..."></textarea>
+        <span class="comment-toggle">▼ Добавить комментарий</span>
+        <div class="comment-area"><textarea data-field="${id}_comment" placeholder="Комментарий..."></textarea></div>
+      </div>
+    `;
+
+    attachAdminBar(card, true);
+    bindCommentToggle(card);
+    afterCard.after(card);
+
+    // Автосохранение для новых полей
+    card.querySelectorAll('textarea').forEach(ta => ta.addEventListener('input', autoSave));
+
+    card.querySelector('.section-title').click(); // не фокус, просто показываем
+    showToast('Новый раздел добавлен', '＋');
+    autoSave();
+  }
+
+  // Инжектируем admin-bar ко всем существующим разделам
+  document.querySelectorAll('.section-card[id]').forEach(card => {
+    card.style.position = 'relative';
+    attachAdminBar(card, false);
+  });
+
+  // Переключение режима
+  toggleBtn.addEventListener('click', () => {
+    const on = document.body.classList.toggle('admin-mode');
+    toggleBtn.classList.toggle('active', on);
+    toggleBtn.textContent = on ? '🔒 Admin ON' : '⚙ Admin';
+    showToast(on ? 'Режим редактирования включён' : 'Режим редактирования выключен', on ? '⚙' : '✓');
   });
 }
 
@@ -378,19 +608,19 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavHighlight();
   initGlossary();
   initMobileNav();
+  initParticipants();
+  initAdminPanel();
 
-  // Автосохранение на любое изменение формы
+  // Автосохранение
   document.addEventListener('input',  autoSave);
   document.addEventListener('change', autoSave);
 
-  // Обновление прогресса
+  // Прогресс
   document.addEventListener('input',  updateProgress);
   document.addEventListener('change', updateProgress);
 
   // Загрузить сохранённые данные
   loadSaved();
-
-  // Начальный расчёт прогресса
   updateProgress();
 
   console.log('EMAI ODM Анкета v3.6 инициализирована');

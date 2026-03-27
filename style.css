@@ -958,6 +958,199 @@ a.term-link:hover { background: #f3e5f5; border-radius: 2px; }
   letter-spacing: 0.05em;
 }
 
+/* === УЧАСТНИКИ === */
+.participants-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.participant-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.participant-row .participant-name {
+  flex: 1;
+}
+
+.participant-row .participant-role {
+  flex: 1;
+}
+
+.participant-remove {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 1.2rem;
+  line-height: 1;
+  color: var(--text-2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, color 0.12s;
+}
+
+.participant-remove:hover {
+  background: #fce8e6;
+  color: var(--red);
+  border-color: var(--red);
+}
+
+.btn-add-participant {
+  margin-top: 10px;
+  border: 1.5px dashed var(--border);
+  color: var(--text-2);
+}
+
+.btn-add-participant:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: #e8f0fe;
+}
+
+/* === АДМИН-ПАНЕЛЬ === */
+.btn-admin {
+  font-size: 0.78rem;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  color: var(--text-2);
+}
+
+.btn-admin.active {
+  background: #fff3e0;
+  border-color: #f9ab00;
+  color: #b06000;
+}
+
+.admin-bar {
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  gap: 4px;
+  z-index: 10;
+}
+
+.admin-mode .section-card {
+  position: relative;
+}
+
+.admin-mode .admin-bar {
+  display: flex;
+}
+
+.admin-btn {
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--text-2);
+  font-size: 0.82rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, color 0.12s;
+  padding: 0;
+}
+
+.admin-btn:hover {
+  background: var(--blue);
+  color: #fff;
+  border-color: var(--blue);
+}
+
+.admin-btn.admin-btn-delete:hover {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+/* Скрытые разделы в режиме просмотра */
+.section-hidden {
+  display: none;
+}
+
+/* В режиме админа — видны, но затемнены */
+.admin-mode .section-hidden {
+  display: block;
+  opacity: 0.4;
+}
+
+.admin-mode .section-hidden .admin-btn-hide {
+  background: #fce8e6;
+  color: var(--red);
+  border-color: var(--red);
+}
+
+/* === МОДАЛЬНОЕ ОКНО РЕДАКТИРОВАНИЯ === */
+.admin-edit-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-edit-inner {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  width: 460px;
+  max-width: 90vw;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-edit-title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.admin-edit-inner input[type="text"] {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  color: var(--text);
+  background: #fff;
+  font-family: 'Inter', sans-serif;
+}
+
+.admin-edit-inner input[type="text"]:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 2px rgba(26,115,232,0.15);
+}
+
+.admin-edit-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  justify-content: flex-end;
+}
+
+/* Кастомные разделы (добавленные в admin-режиме) */
+.custom-section .section-num {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
 /* === NOTIFICATION TOAST === */
 .toast {
   position: fixed;
