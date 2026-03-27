@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>EMAI ODM Спецификация v3.6 — Рабочая анкета</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ======================================================
+     ШАПКА
+     ====================================================== -->
+<header class="site-header">
+  <button id="burger" class="btn btn-ghost btn-sm" style="display:none">☰</button>
+  <div class="header-logo">
+    🎙 EMAI ODM Spec<span>v3.6 — Рабочая анкета</span>
+  </div>
+  <div class="header-progress">
+    <div class="progress-label">
+      <span>Прогресс заполнения</span>
+      <span class="progress-pct">0% заполнено</span>
+    </div>
+    <div class="progress-bar-track"><div class="progress-bar-fill"></div></div>
+  </div>
+  <div class="header-actions">
+    <button id="btn-glossary" class="btn btn-glossary btn-sm">📖 Глоссарий</button>
+    <button id="btn-export"   class="btn btn-outline btn-sm">↑ JSON</button>
+    <button id="btn-import"   class="btn btn-ghost btn-sm">↓ JSON</button>
+    <button id="btn-print"    class="btn btn-ghost btn-sm">🖨</button>
+    <button id="btn-reset"    class="btn btn-ghost btn-sm" style="color:var(--red)">✕ Сброс</button>
+  </div>
+</header>
+
+<!-- ======================================================
+     БОКОВАЯ НАВИГАЦИЯ
+     ====================================================== -->
+<nav class="sidebar">
+  <div class="nav-group">
+    <div class="nav-group-title">🔵 А. Акустика и звук</div>
+    <a href="#r01" class="nav-item">R01 Разборчивость речи (STI)</a>
+    <a href="#r05" class="nav-item">R05 Искажения (THD)</a>
+    <a href="#r07" class="nav-item">R07 DSP авто-EQ</a>
+    <a href="#r18" class="nav-item">R18 Групповая задержка</a>
+    <a href="#r22" class="nav-item">R22 Параметры динамика <span class="nav-badge new">NEW</span></a>
+    <a href="#r23" class="nav-item">R23 Габариты и масса <span class="nav-badge new">NEW</span></a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">🟢 Б. Захват голоса</div>
+    <a href="#r02" class="nav-item">R02 Эхоподавление (AEC)</a>
+    <a href="#r03" class="nav-item">R03 Шумоподавление</a>
+    <a href="#r06" class="nav-item">R06 Самокалибровка мкф</a>
+    <a href="#r12" class="nav-item">R12 Задержка отклика</a>
+    <a href="#r19" class="nav-item">R19 Дальнее поле</a>
+    <a href="#r26" class="nav-item">R26 Массив мкф (доп.) <span class="nav-badge new">NEW</span></a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">🟠 В. Электроника</div>
+    <a href="#r08" class="nav-item">R08 Безопасность напряжения</a>
+    <a href="#r09" class="nav-item">R09 Ток прикосновения</a>
+    <a href="#r21" class="nav-item">R21 WiFi / BLE <span class="nav-badge new">NEW</span></a>
+    <a href="#r24" class="nav-item">R24 Электропитание <span class="nav-badge new">NEW</span></a>
+    <a href="#r25" class="nav-item">R25 Память и хранилище <span class="nav-badge new">NEW</span></a>
+    <a href="#r27" class="nav-item">R27 Тепловой режим <span class="nav-badge new">NEW</span></a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">🔴 Г. Безопасность</div>
+    <a href="#r04" class="nav-item">R04 Автономная тревога</a>
+    <a href="#r13" class="nav-item">R13 Надёжность OTA</a>
+    <a href="#r15" class="nav-item">R15 Hardware Root of Trust</a>
+    <a href="#r16" class="nav-item">R16 Защита ключей</a>
+    <a href="#r17" class="nav-item">R17 Secure Provisioning</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">🟣 Д. Конфиденциальность</div>
+    <a href="#r20" class="nav-item">R20 Privacy &amp; GDPR</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">⚫ Е. Конструктив</div>
+    <a href="#r10" class="nav-item">R10 Защита от вскрытия</a>
+    <a href="#r11" class="nav-item">R11 Защита IP54</a>
+    <a href="#r14" class="nav-item">R14 Серийное производство</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">🔷 Ж. Вычисления</div>
+    <a href="#rcomp" class="nav-item">Вычислительные ресурсы</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">⚪ З. Стоимость</div>
+    <a href="#r28" class="nav-item">R28 BOM и производство <span class="nav-badge new">NEW</span></a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">📋 Итог</div>
+    <a href="#checklist" class="nav-item">Чеклист ODM</a>
+    <a href="#signatures" class="nav-item">Подписи</a>
+  </div>
+</nav>
+
+<!-- ======================================================
+     ГЛОССАРИЙ (DRAWER)
+     ====================================================== -->
+<div id="glossary-overlay" class="glossary-overlay">
+  <div id="glossary-drawer" class="glossary-drawer">
+    <div class="glossary-header">
+      <div class="glossary-title">📖 Глоссарий терминов</div>
+      <button id="glossary-close" class="glossary-close">✕</button>
+    </div>
+    <div class="glossary-search">
+      <input type="text" id="glossary-search" placeholder="Поиск термина...">
+    </div>
+    <div class="glossary-list" id="glossary-list">
+      <!-- Генерируется через JS ниже -->
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================
+     ОСНОВНОЙ КОНТЕНТ
+     ====================================================== -->
+<main class="main">
+
+<!-- ── ГРУППА А: АКУСТИКА ─────────────────────────────── -->
+
+<!-- R01 STI -->
+<div class="section-card acoustic" id="r01">
+  <div class="section-header">
+    <div class="section-num">R01</div>
+    <div class="section-title-block">
+      <div class="section-title">Разборчивость речи (<a class="term-link" data-term="STI">STI</a>)</div>
+      <div class="section-subtitle">Speech Transmission Index — главная акустическая метрика качества</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value">
+      <div class="label">Текущее требование (v3.6)</div>
+      STI ≥ 0.75 во всех условиях эксплуатации
+    </div>
+    <div class="accept-toggle">
+      <button class="accept-btn accept active" data-field="r01_decision" data-value="accept">✓ Принять</button>
+      <button class="accept-btn change" data-field="r01_decision" data-value="change">✎ Изменить</button>
+    </div>
+    <div class="change-input-wrap">
+      <label class="form-label">Новое значение STI (0.0–1.0)</label>
+      <input type="text" data-field="r01_custom" placeholder="например: 0.70" data-required>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area">
+      <textarea data-field="r01_comment" placeholder="Комментарий команды..."></textarea>
+    </div>
+    <details class="help-block">
+      <summary>Справка</summary>
+      <div class="help-content">
+        <p><strong>Простыми словами:</strong> STI показывает, насколько хорошо пожилой человек поймёт речь из динамика. При STI = 0.75 около 95% слов воспринимаются правильно. При STI ниже 0.60 речь становится трудновоспринимаемой даже для людей с нормальным слухом.</p>
+        <div class="competitor-badges">
+          <span class="badge-comp badge-std">IEC 60268-16: ≥ 0.60 = «хорошо», ≥ 0.75 = «отлично»</span>
+          <span class="badge-comp badge-echo">Echo в тихой комнате: ~0.85</span>
+          <span class="badge-comp badge-std">Норматив ВОЗ для систем оповещения: ≥ 0.70</span>
+        </div>
+        <p><strong>Влияние на продукт:</strong> Если опустить до 0.70, у людей с пресбиакузисом (возрастная тугоухость) резко вырастет процент непонятых команд. Рекомендуем держать ≥ 0.75.</p>
+        <p><strong>Влияние на стоимость:</strong> STI 0.75 требует качественного АЦП/ЦАП и DSP-коррекции, но не увеличивает стоимость компонентов — это требование к настройке ПО.</p>
+        <div class="help-sources">
+          <a href="https://www.iec.ch/dyn/www/f?p=103:38:0::::FSP_ORG_ID:1235" target="_blank">[1] IEC 60268-16 STI стандарт</a>
+          <a href="https://www.who.int/docs/default-source/hearing-loss/hearing-loss-prevention-resources.pdf" target="_blank">[2] ВОЗ: требования к слуховым устройствам</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- R05 THD -->
+<div class="section-card acoustic" id="r05">
+  <div class="section-header">
+    <div class="section-num">R05</div>
+    <div class="section-title-block">
+      <div class="section-title">Нелинейные искажения (<a class="term-link" data-term="THD">THD</a>)</div>
+      <div class="section-subtitle">Total Harmonic Distortion — чистота воспроизведения речи</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value">
+      <div class="label">Текущее требование</div>
+      THD &lt; 1% в речевой полосе 500–6000 Гц @ 82 дБ SPL
+    </div>
+    <div class="stepper-wrap">
+      <label class="form-label">Целевой THD (%)</label>
+      <div class="stepper">
+        <button class="stepper-btn stepper-dec" type="button">−</button>
+        <input type="number" class="stepper-input" id="r05_thd" data-field="r05_thd" min="0.1" max="5.0" step="0.1" value="1.0" data-required>
+        <span class="stepper-unit">%</span>
+        <button class="stepper-btn stepper-inc" type="button">+</button>
+      </div>
+      <div class="stepper-range">0.1% (Hi-Fi) → 5.0% (допустимо)</div>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area">
+      <textarea data-field="r05_comment" placeholder="Комментарий команды..."></textarea>
+    </div>
+    <details class="help-block">
+      <summary>Справка</summary>
+      <div class="help-content">
+        <p><strong>Простыми словами:</strong> THD — это «грязь» в звуке. При 1% искажения практически неслышимы. При 5% речь звучит дребезжащей и «грязной». Для пожилых людей чистота речи критична.</p>
+        <div class="competitor-badges">
+          <span class="badge-comp badge-echo">Amazon Echo Dot 5: THD ~0.5% @ 82 дБ</span>
+          <span class="badge-comp badge-apple">HomePod Mini: THD &lt; 0.3%</span>
+          <span class="badge-comp badge-std">ГОСТ 23262-88: Hi-Fi = &lt; 1%</span>
+        </div>
+        <p><strong>Влияние на стоимость:</strong> Достичь THD &lt; 1% с динамиком ценой $2–4 — реально при использовании Class-D усилителя и DSP-лимитера. Снижение до 0.5% требует более дорогого драйвера ($5–8).</p>
+        <div class="help-sources">
+          <a href="https://www.audiosciencereview.com" target="_blank">[1] Audio Science Review — тесты THD смарт-спикеров</a>
+          <a href="https://docs.google.com/spreadsheets/d/echo-dot-5-specs" target="_blank">[2] Amazon Echo Dot 5 официальные характеристики</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- R07 DSP EQ -->
+<div class="section-card acoustic" id="r07">
+  <div class="section-header">
+    <div class="section-num">R07</div>
+    <div class="section-title-block">
+      <div class="section-title">DSP авто-коррекция АЧХ (<a class="term-link" data-term="EQ">авто-EQ</a>)</div>
+      <div class="section-subtitle">Автоматическая компенсация неравномерности АЧХ динамика и защитной сетки</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value">
+      <div class="label">Текущее требование</div>
+      Параметрический EQ (4–6 полос), цель ±1 дБ в полосе 500–6000 Гц
+    </div>
+    <label class="form-label">Количество полос EQ</label>
+    <div class="radio-group horizontal">
+      <label class="radio-item">
+        <input type="radio" name="r07_bands" value="4" data-field="r07_bands" data-required> <span class="radio-label">4 полосы</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r07_bands" value="6" data-field="r07_bands" data-required checked> <span class="radio-label">6 полос</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r07_bands" value="8" data-field="r07_bands" data-required> <span class="radio-label">8 полос</span>
+      </label>
+    </div>
+    <label class="form-label mt-8">Целевая точность коррекции</label>
+    <div class="radio-group horizontal">
+      <label class="radio-item">
+        <input type="radio" name="r07_target" value="1" data-field="r07_target" data-required checked> <span class="radio-label">±1 дБ</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r07_target" value="2" data-field="r07_target" data-required> <span class="radio-label">±2 дБ</span>
+      </label>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r07_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block">
+      <summary>Справка</summary>
+      <div class="help-content">
+        <p><strong>Простыми словами:</strong> Любой динамик воспроизводит разные частоты с разной громкостью — «горбы» и «провалы» в звуке. DSP-EQ их выравнивает. При ±1 дБ речь звучит нейтрально и естественно.</p>
+        <div class="competitor-badges">
+          <span class="badge-comp badge-echo">Amazon Echo: использует Dolby-like DSP EQ, автокалибровка</span>
+          <span class="badge-comp badge-apple">HomePod: 5-полосный EQ + адаптивная комнатная компенсация</span>
+        </div>
+        <p><strong>Влияние на стоимость:</strong> Чисто программная функция — добавляет 0 к BOM. Реализуется в DSP/SoC бесплатно. 6 полос vs 4 — незначительная разница в вычислительных ресурсах.</p>
+        <div class="help-sources">
+          <a href="https://en.wikipedia.org/wiki/Parametric_equalizer" target="_blank">[1] Параметрический эквалайзер — Wikipedia</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- R18 Групповая задержка -->
+<div class="section-card acoustic" id="r18">
+  <div class="section-header">
+    <div class="section-num">R18</div>
+    <div class="section-title-block">
+      <div class="section-title">Групповая задержка (Group Delay) <span class="badge-new">НОВОЕ v3.6</span></div>
+      <div class="section-subtitle">Фазовые искажения — влияют на естественность речи</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value">
+      <div class="label">Текущее требование</div>
+      Group Delay &lt; 1 мс @ 2 кГц; DSP-компенсация фазовых сдвигов динамика
+    </div>
+    <div class="stepper-wrap">
+      <label class="form-label">Допустимая групповая задержка @ 2 кГц</label>
+      <div class="stepper">
+        <button class="stepper-btn stepper-dec" type="button">−</button>
+        <input type="number" class="stepper-input" id="r18_gd" data-field="r18_gd" min="0.5" max="3.0" step="0.1" value="1.0" data-required>
+        <span class="stepper-unit">мс</span>
+        <button class="stepper-btn stepper-inc" type="button">+</button>
+      </div>
+      <div class="stepper-range">0.5 мс (Hi-Fi) → 3.0 мс (заметно)</div>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r18_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block">
+      <summary>Справка</summary>
+      <div class="help-content">
+        <p><strong>Простыми словами:</strong> Групповая задержка — это насколько «запаздывают» разные частоты звука. Если низкие частоты задерживаются на 2–3 мс больше высоких, речь звучит «размыто» и «роботизированно». Пожилые с тугоухостью особенно чувствительны к этому эффекту.</p>
+        <p><strong>Порог слышимости:</strong> Большинство людей начинают замечать разницу при задержке > 1 мс @ 2 кГц. Для пожилых порог может быть ниже.</p>
+        <div class="competitor-badges">
+          <span class="badge-comp badge-apple">HomePod Mini: группов. задержка &lt; 0.5 мс (DSP-компенсация)</span>
+          <span class="badge-comp badge-echo">Amazon Echo: ~1–1.5 мс (без компенсации)</span>
+          <span class="badge-comp badge-std">AES стандарт: &lt; 1 мс для Hi-Fi устройств</span>
+        </div>
+        <p><strong>Влияние на стоимость:</strong> DSP-компенсация — программная, добавляет ~2 MFLOPS к вычислительной нагрузке. Не влияет на стоимость компонентов.</p>
+        <div class="help-sources">
+          <a href="https://www.aes.org/e-lib/browse.cfm?elib=8059" target="_blank">[1] AES: Audibility of Phase Distortion</a>
+          <a href="https://en.wikipedia.org/wiki/Group_delay_and_phase_delay" target="_blank">[2] Group Delay — Wikipedia</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- R22 Параметры динамика -->
+<div class="section-card acoustic" id="r22">
+  <div class="section-header">
+    <div class="section-num">R22</div>
+    <div class="section-title-block">
+      <div class="section-title">Параметры динамика (Speaker Driver) <span class="badge-new">НОВОЕ</span></div>
+      <div class="section-subtitle">Требования к громкоговорителю — критичны для выбора корпуса</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="form-grid-2">
+      <div>
+        <div class="stepper-wrap">
+          <label class="form-label">Диаметр драйвера</label>
+          <div class="stepper">
+            <button class="stepper-btn stepper-dec" type="button">−</button>
+            <input type="number" class="stepper-input" id="r22_diam" data-field="r22_diam" min="35" max="70" step="5" value="50" data-required>
+            <span class="stepper-unit">мм</span>
+            <button class="stepper-btn stepper-inc" type="button">+</button>
+          </div>
+          <div class="stepper-range">35 мм (компакт) → 70 мм (мощный)</div>
+        </div>
+        <div class="competitor-badges" style="margin-top:6px">
+          <span class="badge-comp badge-echo">Echo Dot 5: 44мм</span>
+          <span class="badge-comp badge-google">Nest Mini: 40мм</span>
+          <span class="badge-comp badge-yandex">Yandex Mini: 52мм</span>
+          <span class="badge-comp badge-apple">HomePod Mini: 85мм</span>
+        </div>
+      </div>
+      <div>
+        <div class="stepper-wrap">
+          <label class="form-label">Мощность RMS</label>
+          <div class="stepper">
+            <button class="stepper-btn stepper-dec" type="button">−</button>
+            <input type="number" class="stepper-input" id="r22_pwr" data-field="r22_pwr" min="2" max="10" step="0.5" value="5" data-required>
+            <span class="stepper-unit">Вт</span>
+            <button class="stepper-btn stepper-inc" type="button">+</button>
+          </div>
+          <div class="stepper-range">2 Вт (тихо) → 10 Вт (громко)</div>
+        </div>
+        <div class="competitor-badges" style="margin-top:6px">
+          <span class="badge-comp badge-echo">Echo Dot 5: 1.73 Вт</span>
+          <span class="badge-comp badge-google">Nest Mini: ~2 Вт</span>
+          <span class="badge-comp badge-yandex">Yandex Mini 2: 6 Вт</span>
+        </div>
+      </div>
+    </div>
+    <label class="form-label mt-12">Тип акустического оформления (корпус)</label>
+    <div class="radio-group">
+      <label class="radio-item">
+        <input type="radio" name="r22_enclosure" value="sealed" data-field="r22_enclosure" data-required>
+        <div><div class="radio-label">Закрытый (Sealed)</div><div class="radio-desc">Простой, предсказуемый звук, Q ≈ 0.5–0.7. Сложнее получить глубокий бас в малом объёме.</div></div>
+        <span class="radio-cost cost-low">Дёшево</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r22_enclosure" value="bassreflex" data-field="r22_enclosure" data-required>
+        <div><div class="radio-label">Фазоинвертор (Bass-reflex)</div><div class="radio-desc">Лучший бас при том же объёме. Более сложная настройка порта. Используют Yandex Station Mini 2, Echo (крупные версии).</div></div>
+        <span class="radio-cost cost-mid">Средне</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r22_enclosure" value="passive" data-field="r22_enclosure" data-required>
+        <div><div class="radio-label">Пассивный излучатель (Passive Radiator)</div><div class="radio-desc">Компактный бас без порта. Используют HomePod Mini, Echo (малые). Требует точного расчёта массы PR.</div></div>
+        <span class="radio-cost cost-mid">Средне</span>
+      </label>
+    </div>
+    <label class="form-label mt-12">Класс усилителя</label>
+    <div class="radio-group horizontal">
+      <label class="radio-item">
+        <input type="radio" name="r22_amp" value="classD" data-field="r22_amp" data-required checked>
+        <div><div class="radio-label">Class-D</div><div class="radio-desc">КПД > 85%, почти не греется. Стандарт для смарт-спикеров. Чип: TPA3118 (~$0.8)</div></div>
+        <span class="radio-cost cost-low">~$0.8 BOM</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r22_amp" value="classAB" data-field="r22_amp" data-required>
+        <div><div class="radio-label">Class-AB</div><div class="radio-desc">Лучше THD при малой мощности, но нагрев и потребление выше. Нецелесообразен.</div></div>
+        <span class="radio-cost cost-high">Нецелесообразно</span>
+      </label>
+    </div>
+    <label class="form-label mt-12">Импеданс динамика</label>
+    <div class="radio-group horizontal">
+      <label class="radio-item">
+        <input type="radio" name="r22_imp" value="8" data-field="r22_imp" data-required checked>
+        <div><div class="radio-label">8 Ом</div><div class="radio-desc">Меньший ток, проще усилитель, меньше потерь в проводах.</div></div>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r22_imp" value="4" data-field="r22_imp" data-required>
+        <div><div class="radio-label">4 Ом</div><div class="radio-desc">Выше мощность при том же напряжении, но требует более мощный усилитель.</div></div>
+      </label>
+    </div>
+    <label class="form-label mt-12">Минимальный уровень SPL @ 1 м</label>
+    <div class="stepper-wrap">
+      <label class="form-label">Целевой SPL @ 1 м</label>
+      <div class="stepper">
+        <button class="stepper-btn stepper-dec" type="button">−</button>
+        <input type="number" class="stepper-input" id="r22_spl" data-field="r22_spl" min="75" max="95" step="1" value="85" data-required>
+        <span class="stepper-unit">дБ</span>
+        <button class="stepper-btn stepper-inc" type="button">+</button>
+      </div>
+      <div class="stepper-range">75 дБ (тихо) → 95 дБ (очень громко)</div>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r22_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block">
+      <summary>Справка</summary>
+      <div class="help-content">
+        <p><strong>Простыми словами:</strong> Диаметр 50 мм даёт хорошее соотношение цены и качества — достаточно громко для комнаты 30 м², воспроизводит речевой диапазон 200–12 000 Гц. Меньше 40 мм = тихо и плохой бас для 5–8 метров.</p>
+        <p><strong>Для 5–8 метров нужно:</strong> SPL @ 1м ≥ 85 дБ (с учётом затухания ~14 дБ на 5 м — получаем ~71 дБ у слушателя, что нормально для пожилого человека в тихой комнате).</p>
+        <div class="competitor-badges">
+          <span class="badge-comp badge-echo">Echo Dot 5 — 44мм, 1.73Вт, sealed, $50 рознице</span>
+          <span class="badge-comp badge-yandex">Yandex Station Mini 2 — 52мм, 6Вт, bass-reflex, $60</span>
+          <span class="badge-comp badge-apple">HomePod Mini — 85мм, 5Вт, 2×PR, $100</span>
+        </div>
+        <div class="help-sources">
+          <a href="https://www.ifixit.com/Teardown/Amazon+Echo+Dot+5th+Gen+Teardown/151767" target="_blank">[1] Echo Dot 5 Teardown — iFixit</a>
+          <a href="https://www.ifixit.com/Teardown/HomePod+Mini+Teardown/137163" target="_blank">[2] HomePod Mini Teardown — iFixit</a>
+          <a href="https://en.wikipedia.org/wiki/Bass_reflex" target="_blank">[3] Bass-reflex — Wikipedia</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- R23 Габариты -->
+<div class="section-card acoustic" id="r23">
+  <div class="section-header">
+    <div class="section-num">R23</div>
+    <div class="section-title-block">
+      <div class="section-title">Физические габариты и масса <span class="badge-new">НОВОЕ</span></div>
+      <div class="section-subtitle">Ограничения для конструкторского отдела и логистики</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="error-fix-banner">
+      <span class="icon">ℹ️</span>
+      <div>Габариты не указаны в оригинальной спецификации. 3D-модель: <strong>EMAI_Speaker_assembled_from_parts_v3_UPD.stp</strong>. Заполните размеры или подтвердите из модели.</div>
+    </div>
+    <label class="form-label">Форм-фактор</label>
+    <div class="radio-group horizontal">
+      <label class="radio-item">
+        <input type="radio" name="r23_form" value="cylinder" data-field="r23_form" data-required>
+        <div><div class="radio-label">Цилиндр</div><div class="radio-desc">Echo Dot, Yandex Station, HomePod Mini</div></div>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r23_form" value="rect" data-field="r23_form" data-required>
+        <div><div class="radio-label">Прямоугольник</div><div class="radio-desc">Google Nest Audio, Sonos</div></div>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r23_form" value="puck" data-field="r23_form" data-required>
+        <div><div class="radio-label">Шайба/плоский</div><div class="radio-desc">Nest Mini, Echo Flex</div></div>
+      </label>
+    </div>
+    <div class="form-grid-2 mt-12">
+      <div class="stepper-wrap">
+        <label class="form-label">Диаметр / Ширина</label>
+        <div class="stepper">
+          <button class="stepper-btn stepper-dec" type="button">−</button>
+          <input type="number" class="stepper-input" id="r23_w" data-field="r23_w" min="70" max="180" step="5" value="100">
+          <span class="stepper-unit">мм</span>
+          <button class="stepper-btn stepper-inc" type="button">+</button>
+        </div>
+        <div class="stepper-range">70 → 180 мм · <span class="badge-comp badge-echo" style="font-size:0.65rem">Echo Dot: 99мм</span> <span class="badge-comp badge-apple" style="font-size:0.65rem">HomePod: 98мм</span></div>
+      </div>
+      <div class="stepper-wrap">
+        <label class="form-label">Высота</label>
+        <div class="stepper">
+          <button class="stepper-btn stepper-dec" type="button">−</button>
+          <input type="number" class="stepper-input" id="r23_h" data-field="r23_h" min="50" max="160" step="5" value="80">
+          <span class="stepper-unit">мм</span>
+          <button class="stepper-btn stepper-inc" type="button">+</button>
+        </div>
+        <div class="stepper-range">50 → 160 мм</div>
+      </div>
+    </div>
+    <div class="stepper-wrap mt-8">
+      <label class="form-label">Масса устройства (без кабеля)</label>
+      <div class="stepper">
+        <button class="stepper-btn stepper-dec" type="button">−</button>
+        <input type="number" class="stepper-input" id="r23_mass" data-field="r23_mass" min="150" max="900" step="50" value="400">
+        <span class="stepper-unit">г</span>
+        <button class="stepper-btn stepper-inc" type="button">+</button>
+      </div>
+      <div class="stepper-range">150 г (Echo Dot 5: 304г) → 900 г</div>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r23_comment" placeholder="Укажите ссылку на 3D-модель или актуальные размеры..."></textarea></div>
+    <details class="help-block">
+      <summary>Справка</summary>
+      <div class="help-content">
+        <p><strong>Простыми словами:</strong> Размер влияет на акустический объём (чем больше — тем глубже бас), устойчивость (чем тяжелее — тем стабильнее), и удобство для персонала (перемещение при уборке).</p>
+        <p><strong>Ограничение снизу:</strong> Для 7 микрофонов на кольце с шагом 28.5 мм нужен минимальный диаметр платы ~65 мм → корпус от ~90 мм диаметром.</p>
+        <div class="competitor-badges">
+          <span class="badge-comp badge-echo">Echo Dot 5: ⌀99×35мм, 304г</span>
+          <span class="badge-comp badge-apple">HomePod Mini: ⌀98×84мм, 345г</span>
+          <span class="badge-comp badge-yandex">Yandex Station Mini: 85×85×85мм, 400г</span>
+          <span class="badge-comp badge-google">Nest Mini: 98×78×41мм, 181г</span>
+        </div>
+        <div class="help-sources">
+          <a href="https://www.amazon.com/dp/B09B8XYXRS" target="_blank">[1] Amazon Echo Dot 5 официальные характеристики</a>
+          <a href="https://www.apple.com/homepod-mini/specs/" target="_blank">[2] Apple HomePod Mini Specs</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ── ГРУППА Б: ЗАХВАТ ГОЛОСА ────────────────────────── -->
+
+<!-- R02 AEC -->
+<div class="section-card microphone" id="r02">
+  <div class="section-header">
+    <div class="section-num">R02</div>
+    <div class="section-title-block">
+      <div class="section-title">Эхоподавление (<a class="term-link" data-term="AEC">AEC</a>) — двунаправленное аудио</div>
+      <div class="section-subtitle">Acoustic Echo Cancellation — микрофон не должен «слышать» собственный динамик</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value">
+      <div class="label">Текущее требование</div>
+      Echo Cancellation &gt; 40 дБ (алгоритмический) ИЛИ &gt; 50 дБ (виброизоляция)
+    </div>
+    <label class="form-label">Метод эхоподавления</label>
+    <div class="radio-group">
+      <label class="radio-item">
+        <input type="radio" name="r02_method" value="algo" data-field="r02_method" data-required checked>
+        <div><div class="radio-label">Алгоритмический AEC</div><div class="radio-desc">Программная фильтрация эха. Гибко, не требует специального механического монтажа. Требует ~5–10 MFLOPS DSP.</div></div>
+        <span class="radio-cost cost-low">Дёшево</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r02_method" value="vib" data-field="r02_method" data-required>
+        <div><div class="radio-label">Виброизоляция + AEC</div><div class="radio-desc">Резиновые подушки + алгоритм. Лучший результат, но усложняет конструктив.</div></div>
+        <span class="radio-cost cost-mid">Средне</span>
+      </label>
+    </div>
+    <div class="stepper-wrap mt-8">
+      <label class="form-label">Целевое подавление эха</label>
+      <div class="stepper">
+        <button class="stepper-btn stepper-dec" type="button">−</button>
+        <input type="number" class="stepper-input" id="r02_aec" data-field="r02_aec" min="30" max="60" step="5" value="40" data-required>
+        <span class="stepper-unit">дБ</span>
+        <button class="stepper-btn stepper-inc" type="button">+</button>
+      </div>
+      <div class="stepper-range">30 дБ → 60 дБ</div>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r02_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block">
+      <summary>Справка</summary>
+      <div class="help-content">
+        <p><strong>Простыми словами:</strong> Когда устройство воспроизводит музыку или сообщение, а пожилой человек говорит — микрофон не должен записывать сигнал из собственного динамика. AEC «вычитает» звук динамика из записи.</p>
+        <div class="competitor-badges">
+          <span class="badge-comp badge-echo">Amazon Echo: AEC > 40 дБ, алгоритм Alexa</span>
+          <span class="badge-comp badge-google">Google Nest: > 35 дБ + виброизоляция</span>
+          <span class="badge-comp badge-std">WebRTC AEC (открытый код): ~30–40 дБ</span>
+        </div>
+        <div class="help-sources">
+          <a href="https://webrtc.org/getting-started/overview" target="_blank">[1] WebRTC AEC — Google Open Source</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- R03 Шумоподавление -->
+<div class="section-card microphone" id="r03">
+  <div class="section-header">
+    <div class="section-num">R03</div>
+    <div class="section-title-block">
+      <div class="section-title">Структурное шумоподавление</div>
+      <div class="section-subtitle">Подавление фонового шума помещения (ИВЛ, ТВ, голоса)</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value">
+      <div class="label">Текущее требование</div>
+      ≥ 20 дБ подавления в полосе 100 Гц – 16 кГц
+    </div>
+    <div class="stepper-wrap">
+      <label class="form-label">Целевое шумоподавление</label>
+      <div class="stepper">
+        <button class="stepper-btn stepper-dec" type="button">−</button>
+        <input type="number" class="stepper-input" id="r03_ns" data-field="r03_ns" min="10" max="40" step="5" value="20" data-required>
+        <span class="stepper-unit">дБ</span>
+        <button class="stepper-btn stepper-inc" type="button">+</button>
+      </div>
+      <div class="stepper-range">10 дБ (минимум) → 40 дБ (нейросеть)</div>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r03_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block">
+      <summary>Справка</summary>
+      <div class="help-content">
+        <p><strong>Простыми словами:</strong> В палате постоянно шумит кондиционер (~45–55 дБ), может работать телевизор. 20 дБ подавления — стандарт для умных колонок. 30+ дБ достигается нейросетевым шумоподавлением (нужна модель, ~10 MFLOPS).</p>
+        <div class="competitor-badges">
+          <span class="badge-comp badge-echo">Amazon Echo: ~20 дБ с Alexa NS</span>
+          <span class="badge-comp badge-google">Google Nest: ~25 дБ нейросетевое</span>
+          <span class="badge-comp badge-std">Speex NS (открытый): ~15–20 дБ</span>
+        </div>
+        <div class="help-sources">
+          <a href="https://github.com/xiph/speex" target="_blank">[1] Speex Noise Suppression (open source)</a>
+          <a href="https://github.com/microsoft/DNS-Challenge" target="_blank">[2] Microsoft DNS Challenge — neural noise suppression</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- R06 Самокалибровка -->
+<div class="section-card microphone" id="r06">
+  <div class="section-header">
+    <div class="section-num">R06</div>
+    <div class="section-title-block">
+      <div class="section-title">Самокалибровка микрофонов</div>
+      <div class="section-subtitle">Мониторинг STI каждые N часов, оповещение при деградации</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value">
+      <div class="label">Текущее требование</div>
+      STI-мониторинг каждые 24ч; тревога если STI падает &gt; 0.05
+    </div>
+    <label class="form-label">Интервал самокалибровки</label>
+    <div class="radio-group horizontal">
+      <label class="radio-item"><input type="radio" name="r06_interval" value="12" data-field="r06_interval" data-required><span class="radio-label">Каждые 12 ч</span></label>
+      <label class="radio-item"><input type="radio" name="r06_interval" value="24" data-field="r06_interval" data-required checked><span class="radio-label">Каждые 24 ч</span></label>
+      <label class="radio-item"><input type="radio" name="r06_interval" value="48" data-field="r06_interval" data-required><span class="radio-label">Каждые 48 ч</span></label>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r06_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block">
+      <summary>Справка</summary>
+      <div class="help-content">
+        <p><strong>Простыми словами:</strong> Со временем защитная сетка микрофона засоряется, появляются трещины в корпусе. Устройство само проверяет качество записи ночью (короткий тест-сигнал) и уведомляет персонал если качество упало.</p>
+        <p>Каждые 24 часа — оптимальный компромисс: не тревожит ночью слишком часто, ловит проблемы быстро.</p>
+        <div class="help-sources">
+          <a href="https://www.iec.ch" target="_blank">[1] IEC 60268-16 — методика измерения STI</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- R12 Задержка -->
+<div class="section-card microphone" id="r12">
+  <div class="section-header">
+    <div class="section-num">R12</div>
+    <div class="section-title-block">
+      <div class="section-title">Задержка отклика и тайминг</div>
+      <div class="section-subtitle">От произнесения слова-триггера до начала ответа</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value">
+      <div class="label">Текущее требование</div>
+      Audio-to-Wake &lt; 200 мс; VAD 300–500 мс
+    </div>
+    <div class="form-grid-2">
+      <div class="stepper-wrap">
+        <label class="form-label">Wake-word задержка</label>
+        <div class="stepper">
+          <button class="stepper-btn stepper-dec" type="button">−</button>
+          <input type="number" class="stepper-input" id="r12_wake" data-field="r12_wake" min="100" max="500" step="50" value="200" data-required>
+          <span class="stepper-unit">мс</span>
+          <button class="stepper-btn stepper-inc" type="button">+</button>
+        </div>
+        <div class="stepper-range">100 → 500 мс</div>
+      </div>
+      <div class="stepper-wrap">
+        <label class="form-label">VAD пауза (конец речи)</label>
+        <div class="stepper">
+          <button class="stepper-btn stepper-dec" type="button">−</button>
+          <input type="number" class="stepper-input" id="r12_vad" data-field="r12_vad" min="200" max="800" step="50" value="400" data-required>
+          <span class="stepper-unit">мс</span>
+          <button class="stepper-btn stepper-inc" type="button">+</button>
+        </div>
+        <div class="stepper-range">200 мс (быстро) → 800 мс (надёжно)</div>
+      </div>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r12_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block">
+      <summary>Справка</summary>
+      <div class="help-content">
+        <p><strong>Простыми словами:</strong> После слова «Алекса» или «Эмма» устройство должно отреагировать за 200 мс — иначе пожилой человек подумает, что не услышали. VAD-пауза 400 мс — время ожидания после последнего слова. При 200 мс система может «обрезать» фразу.</p>
+        <div class="competitor-badges">
+          <span class="badge-comp badge-echo">Amazon Echo: wake-word ~150 мс, VAD ~400 мс</span>
+          <span class="badge-comp badge-google">Google Home: wake-word ~200 мс, VAD ~500 мс</span>
+        </div>
+        <div class="help-sources">
+          <a href="https://developer.amazon.com/en-US/alexa/alexa-voice-service" target="_blank">[1] Alexa Voice Service документация</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- R19 Дальнее поле -->
+<div class="section-card microphone" id="r19">
+  <div class="section-header">
+    <div class="section-num">R19</div>
+    <div class="section-title-block">
+      <div class="section-title">Захват голоса на дальнем расстоянии (Far-Field) <span class="badge-new">НОВОЕ v3.6</span></div>
+      <div class="section-subtitle">5–8 метров в комнате 30 м² — обязательно для прикроватного устройства</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="subsection">
+      <div class="subsection-header">А. Количество микрофонов в массиве</div>
+      <div class="subsection-body">
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="r19_mics" value="4" data-field="r19_mics" data-required>
+            <div><div class="radio-label">4 микрофона</div><div class="radio-desc">Усиление массива +6 дБ. Достаточно для 5 м. Кольцо ⌀36 мм. Echo Dot 3/4/5.</div></div>
+            <span class="radio-cost cost-low">~$3–4 BOM</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="r19_mics" value="6" data-field="r19_mics" data-required>
+            <div><div class="radio-label">6 микрофонов</div><div class="radio-desc">Усиление +7.8 дБ. Хорошо до 7 м. Кольцо ⌀54 мм. Microsoft Cortana Speaker.</div></div>
+            <span class="radio-cost cost-mid">~$4–6 BOM</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="r19_mics" value="7" data-field="r19_mics" data-required checked>
+            <div><div class="radio-label">7 микрофонов</div><div class="radio-desc">Усиление +8.5 дБ. До 8 м. Кольцо ⌀63 мм. Amazon Echo 4-е пок., Yandex Station.</div></div>
+            <span class="radio-cost cost-mid">~$5–7 BOM</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="r19_mics" value="8" data-field="r19_mics" data-required>
+            <div><div class="radio-label">8 микрофонов</div><div class="radio-desc">Усиление +9 дБ. Максимум. Кольцо ⌀72 мм. Избыточно при 8 м.</div></div>
+            <span class="radio-cost cost-high">~$6–9 BOM</span>
+          </label>
+        </div>
+        <div class="competitor-badges">
+          <span class="badge-comp badge-echo">Echo Dot 3/4/5: 4 мкф кольцо</span>
+          <span class="badge-comp badge-echo">Echo 4: 7 мкф кольцо</span>
+          <span class="badge-comp badge-apple">HomePod Mini: 5 мкф звезда</span>
+          <span class="badge-comp badge-yandex">Yandex Station: 7 мкф кольцо</span>
+          <span class="badge-comp badge-google">Nest Mini: 3 мкф треугольник</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-header">Б. Алгоритм подавления реверберации (Dereverberation)</div>
+      <div class="subsection-body">
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="r19_dereverb" value="A" data-field="r19_dereverb" data-required>
+            <div><div class="radio-label">A: Спектральное вычитание</div><div class="radio-desc">Простой, работает с одним микрофоном. Даёт «музыкальный шум» (chirpy). ~5 MFLOPS.</div></div>
+            <span class="radio-cost cost-low">Простой</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="r19_dereverb" value="B" data-field="r19_dereverb" data-required checked>
+            <div><div class="radio-label">B: Слепая идентификация канала (рекомендовано)</div><div class="radio-desc">Оценивает импульсный отклик комнаты по массиву мкф. Хорошее качество без артефактов. ~15–20 MFLOPS.</div></div>
+            <span class="radio-cost cost-mid">Рекомендовано</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="r19_dereverb" value="C" data-field="r19_dereverb" data-required>
+            <div><div class="radio-label">C: Нейросеть (LSTM/Transformer)</div><div class="radio-desc">Лучшее качество, обучена на реальных записях комнат. ~10–30 MFLOPS. Требует данных для обучения.</div></div>
+            <span class="radio-cost cost-high">Перспективно</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-header">В. Обнаружение голоса в шуме (VAD при SNR &lt; 0 дБ)</div>
+      <div class="subsection-body">
+        <div class="stepper-wrap">
+          <label class="form-label">Минимальный SNR для надёжного VAD</label>
+          <div class="stepper">
+            <button class="stepper-btn stepper-dec" type="button">−</button>
+            <input type="number" class="stepper-input" id="r19_vad_snr" data-field="r19_vad_snr" min="-10" max="0" step="1" value="-5" data-required>
+            <span class="stepper-unit">дБ</span>
+            <button class="stepper-btn stepper-inc" type="button">+</button>
+          </div>
+          <div class="stepper-range">−10 дБ (шум громче речи) → 0 дБ (равно)</div>
+        </div>
+        <div class="radio-group horizontal">
+          <label class="radio-item"><input type="radio" name="r19_vad_algo" value="webrtc" data-field="r19_vad_algo"><span class="radio-label">WebRTC VAD (Google, открытый)</span></label>
+          <label class="radio-item"><input type="radio" name="r19_vad_algo" value="silero" data-field="r19_vad_algo" checked><span class="radio-label">Silero VAD (нейросеть, MIT)</span></label>
+          <label class="radio-item"><input type="radio" name="r19_vad_algo" value="custom" data-field="r19_vad_algo"><span class="radio-label">Собственная реализация</span></label>
+        </div>
+      </div>
+    </div>
+
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r19_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block">
+      <summary>Справка</summary>
+      <div class="help-content">
+        <p><strong>Простыми словами:</strong> Пожилой человек лежит в 6 метрах от устройства. Работает телевизор. Устройство должно услышать голос, убрать эхо от стен и отделить речь от шума ТВ. Для этого нужен массив из 4–7 микрофонов и алгоритм дереверберации.</p>
+        <p><strong>Реверберация T60 = 0.3–0.5 с</strong> в типичной комнате 30 м² снижает разборчивость с STI 0.85 до 0.55 без обработки. Алгоритм B восстанавливает до STI ≥ 0.75.</p>
+        <div class="competitor-badges">
+          <span class="badge-comp badge-echo">Amazon Echo 4 (7мкф): уверенный захват до 8–9м</span>
+          <span class="badge-comp badge-yandex">Yandex Station (7мкф): до 7–8м в тихой комнате</span>
+          <span class="badge-comp badge-echo">Echo Dot 5 (4мкф): надёжно до 5м</span>
+        </div>
+        <div class="help-sources">
+          <a href="https://github.com/snakers4/silero-vad" target="_blank">[1] Silero VAD — MIT лицензия, GitHub</a>
+          <a href="https://webrtc.org" target="_blank">[2] WebRTC VAD — Google Open Source</a>
+          <a href="https://ieeexplore.ieee.org/document/9747887" target="_blank">[3] IEEE: Far-field speech recognition survey 2022</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- R26 Микрофонный массив доп. -->
+<div class="section-card microphone" id="r26">
+  <div class="section-header">
+    <div class="section-num">R26</div>
+    <div class="section-title-block">
+      <div class="section-title">Параметры микрофонного массива (доп.) <span class="badge-new">НОВОЕ</span></div>
+      <div class="section-subtitle">Тип MEMS, SNR, согласование, топология — для отдела разработки</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <label class="form-label">Тип микрофона</label>
+    <div class="radio-group">
+      <label class="radio-item">
+        <input type="radio" name="r26_type" value="mems_pdm" data-field="r26_type" data-required checked>
+        <div><div class="radio-label">MEMS с цифровым выходом PDM (рекомендовано)</div><div class="radio-desc">Knowles SPH0645, InvenSense ICS-43434, GoerTek. Нет внешнего АЦП, лучшее согласование в массиве. Стандарт Echo/HomePod/Yandex.</div></div>
+        <span class="radio-cost cost-low">$0.5–1.5 / мкф</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r26_type" value="mems_analog" data-field="r26_type" data-required>
+        <div><div class="radio-label">MEMS с аналоговым выходом</div><div class="radio-desc">Требует внешний АЦП. Более сложная разводка, хуже согласование. Нецелесообразно для массива.</div></div>
+        <span class="radio-cost cost-mid">Нецелесообразно</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r26_type" value="ecm" data-field="r26_type" data-required>
+        <div><div class="radio-label">ECM (электретный конденсаторный)</div><div class="radio-desc">Дешевле, но хуже согласование, большой разброс характеристик. Плохо для формирования луча.</div></div>
+        <span class="radio-cost cost-low">Не рекомендовано</span>
+      </label>
+    </div>
+    <div class="form-grid-2 mt-12">
+      <div class="stepper-wrap">
+        <label class="form-label">Индивид. SNR микрофона</label>
+        <div class="stepper">
+          <button class="stepper-btn stepper-dec" type="button">−</button>
+          <input type="number" class="stepper-input" id="r26_snr" data-field="r26_snr" min="60" max="72" step="1" value="65" data-required>
+          <span class="stepper-unit">дБ(A)</span>
+          <button class="stepper-btn stepper-inc" type="button">+</button>
+        </div>
+        <div class="stepper-range">60 → 72 дБ · <span class="badge-comp badge-echo" style="font-size:0.65rem">Knowles: 65</span> <span class="badge-comp badge-std" style="font-size:0.65rem">Infineon: 69</span></div>
+      </div>
+      <div class="stepper-wrap">
+        <label class="form-label">AOP (перегрузка)</label>
+        <div class="stepper">
+          <button class="stepper-btn stepper-dec" type="button">−</button>
+          <input type="number" class="stepper-input" id="r26_aop" data-field="r26_aop" min="115" max="135" step="1" value="120" data-required>
+          <span class="stepper-unit">дБ SPL</span>
+          <button class="stepper-btn stepper-inc" type="button">+</button>
+        </div>
+        <div class="stepper-range">115 → 135 дБ</div>
+      </div>
+    </div>
+    <label class="form-label mt-8">Топология массива</label>
+    <div class="radio-group horizontal">
+      <label class="radio-item">
+        <input type="radio" name="r26_topo" value="circular" data-field="r26_topo" data-required checked>
+        <div><div class="radio-label">Кольцевой (круговой)</div><div class="radio-desc">360° покрытие. Стандарт Echo/HomePod/Yandex. Подходит для комнаты.</div></div>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r26_topo" value="linear" data-field="r26_topo" data-required>
+        <div><div class="radio-label">Линейный</div><div class="radio-desc">Проще разводка, но «слепая» ось. Не рекомендуется.</div></div>
+      </label>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r26_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block">
+      <summary>Справка</summary>
+      <div class="help-content">
+        <p><strong>Почему MEMS PDM:</strong> В кольцевом массиве 7 микрофонов критично, чтобы все имели одинаковую чувствительность (±1 дБ). У MEMS PDM чипов заводское согласование ~±1 дБ. У ECM микрофонов разброс достигает ±3–4 дБ — это разрушает формирование луча.</p>
+        <p><strong>SNR 65 vs 69 дБ(A):</strong> Разница в $0.6/мкф. При 7 микрофонах = $4.2 разница в BOM. Для 5–8 метров SNR 65 дБ(A) достаточно.</p>
+        <div class="compare-table" style="overflow-x:auto">
+          <table class="compare-table">
+            <tr><th>Чип</th><th>SNR</th><th>AOP</th><th>Выход</th><th>Цена @10K</th></tr>
+            <tr><td>Knowles SPH0645LM4H</td><td>65 дБ(A)</td><td>120 дБ</td><td>PDM</td><td>$0.90</td></tr>
+            <tr><td>TDK ICS-43434</td><td>65 дБ(A)</td><td>116 дБ</td><td>I2S</td><td>$0.80</td></tr>
+            <tr><td>Infineon IM69D130</td><td>69 дБ(A)</td><td>130 дБ</td><td>PDM</td><td>$1.50</td></tr>
+            <tr><td>GoerTek MSM381ACT3-R</td><td>65 дБ(A)</td><td>118 дБ</td><td>PDM</td><td>$0.50</td></tr>
+          </table>
+        </div>
+        <div class="help-sources">
+          <a href="https://www.knowles.com/docs/default-source/model-downloads/sph0645lm4h-b.pdf" target="_blank">[1] Knowles SPH0645 Datasheet</a>
+          <a href="https://invensense.tdk.com/products/ics-43434/" target="_blank">[2] TDK InvenSense ICS-43434</a>
+          <a href="https://www.infineon.com/cms/en/product/sensor/mems-microphones/im69d130/" target="_blank">[3] Infineon IM69D130</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ── ГРУППА В: ЭЛЕКТРОНИКА ──────────────────────────── -->
+
+<!-- R08 SELV -->
+<div class="section-card electronics" id="r08">
+  <div class="section-header">
+    <div class="section-num">R08</div>
+    <div class="section-title-block">
+      <div class="section-title">Безопасность внутреннего напряжения (<a class="term-link" data-term="SELV">SELV</a>)</div>
+      <div class="section-subtitle">Защита от поражения электрическим током — обязательно для пожилых</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value"><div class="label">Текущее требование</div>≤ 12V DC SELV — все внутренние цепи</div>
+    <div class="accept-toggle">
+      <button class="accept-btn accept active">✓ Принять</button>
+      <button class="accept-btn change">✎ Изменить</button>
+    </div>
+    <div class="change-input-wrap">
+      <input type="text" data-field="r08_custom" placeholder="напр.: 5V или 9V">
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r08_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block"><summary>Справка</summary><div class="help-content">
+      <p><strong>Простыми словами:</strong> SELV означает, что внутри корпуса нет напряжений выше 12В. Даже если пожилой человек вскроет корпус или устройство сломается — нет риска удара током. Это требование IEC 62368-1 для бытовых устройств в учреждениях.</p>
+      <div class="competitor-badges">
+        <span class="badge-comp badge-echo">Echo Dot 5: 9V DC внутренние цепи</span>
+        <span class="badge-comp badge-std">IEC 62368-1: SELV ≤ 60V AC / 120V DC</span>
+        <span class="badge-comp badge-std">Наш стандарт строже: ≤ 12V (избыточный запас)</span>
+      </div>
+      <div class="help-sources"><a href="https://webstore.iec.ch/publication/6687" target="_blank">[1] IEC 62368-1 Audio/Video стандарт</a></div>
+    </div></details>
+  </div>
+</div>
+
+<!-- R09 Ток прикосновения -->
+<div class="section-card electronics" id="r09">
+  <div class="section-header">
+    <div class="section-num">R09</div>
+    <div class="section-title-block">
+      <div class="section-title">Ток прикосновения (Touch Current)</div>
+      <div class="section-subtitle">Безопасность для пациентов с кардиостимуляторами</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value"><div class="label">Текущее требование</div>&lt; 100 мкА — безопасно для кардиостимуляторов</div>
+    <div class="stepper-wrap">
+      <label class="form-label">Макс. допустимый ток прикосновения</label>
+      <div class="stepper">
+        <button class="stepper-btn stepper-dec" type="button">−</button>
+        <input type="number" class="stepper-input" id="r09_tc" data-field="r09_tc" min="10" max="500" step="10" value="100" data-required>
+        <span class="stepper-unit">мкА</span>
+        <button class="stepper-btn stepper-inc" type="button">+</button>
+      </div>
+      <div class="stepper-range">10 мкА (хирургия) → 500 мкА (предел IEC)</div>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r09_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block"><summary>Справка</summary><div class="help-content">
+      <p><strong>Простыми словами:</strong> Ток прикосновения — это ток через тело человека при касании корпуса. IEC разрешает до 500 мкА для бытовых устройств. Мы требуем &lt; 100 мкА — для безопасности пациентов с кардиостимуляторами, которые могут быть в доме престарелых.</p>
+      <p><strong>100 мкА достигается</strong> через правильное заземление корпуса, развязывающие конденсаторы и Y-конденсаторы в блоке питания. Дополнительной стоимости к BOM практически не добавляет.</p>
+      <div class="competitor-badges">
+        <span class="badge-comp badge-std">IEC 62368-1: &lt; 500 мкА бытовые</span>
+        <span class="badge-comp badge-std">IEC 60601 (медицина): &lt; 100 мкА для пациентских устройств</span>
+      </div>
+    </div></details>
+  </div>
+</div>
+
+<!-- R21 WiFi/BLE -->
+<div class="section-card electronics" id="r21">
+  <div class="section-header">
+    <div class="section-num">R21</div>
+    <div class="section-title-block">
+      <div class="section-title">Беспроводная связь (WiFi + <a class="term-link" data-term="BLE">BLE</a>) <span class="badge-new">НОВОЕ</span></div>
+      <div class="section-subtitle">Отсутствует в оригинальной спецификации — критический пробел</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="error-fix-banner">
+      <span class="icon">⚠️</span>
+      <div><strong>Пробел в спецификации:</strong> WiFi не был специфицирован. Без этого ODM не может выбрать SoC и спроектировать PCB. Текущие рекомендации основаны на анализе конкурентов.</div>
+    </div>
+    <label class="form-label">Стандарт WiFi</label>
+    <div class="radio-group">
+      <label class="radio-item">
+        <input type="radio" name="r21_wifi" value="n_24" data-field="r21_wifi" data-required>
+        <div><div class="radio-label">802.11n (2.4 ГГц только)</div><div class="radio-desc">Минимум. Дешевле, но перегруженный диапазон в учреждениях (~30 сетей). Echo Dot 3 использовал этот вариант.</div></div>
+        <span class="radio-cost cost-low">~$1.5 BOM</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r21_wifi" value="ac_dual" data-field="r21_wifi" data-required checked>
+        <div><div class="radio-label">802.11ac Dual-Band (2.4 + 5 ГГц) — рекомендовано</div><div class="radio-desc">Надёжнее в загруженных сетях. 5 ГГц — меньше помех. Echo Dot 5, Nest Mini, HomePod Mini, Yandex Station Mini.</div></div>
+        <span class="radio-cost cost-mid">~$2.5 BOM</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r21_wifi" value="ax" data-field="r21_wifi" data-required>
+        <div><div class="radio-label">802.11ax (WiFi 6)</div><div class="radio-desc">Наилучшая производительность в загруженных сетях. Но инфраструктура учреждений ещё не готова к WiFi 6 в 2026.</div></div>
+        <span class="radio-cost cost-high">~$4.0 BOM</span>
+      </label>
+    </div>
+    <label class="form-label mt-12">Bluetooth (для первоначальной настройки)</label>
+    <div class="radio-group horizontal">
+      <label class="radio-item">
+        <input type="radio" name="r21_bt" value="42" data-field="r21_bt" data-required>
+        <div><div class="radio-label">BLE 4.2</div><div class="radio-desc">Достаточно для provisioning</div></div>
+        <span class="radio-cost cost-low">Базовый</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r21_bt" value="50" data-field="r21_bt" data-required checked>
+        <div><div class="radio-label">BLE 5.0 (рекомендовано)</div><div class="radio-desc">Дальность, более надёжное соединение. Стандарт 2024+.</div></div>
+        <span class="radio-cost cost-mid">Стандарт</span>
+      </label>
+    </div>
+    <label class="form-label mt-12">Метод первоначальной настройки (Provisioning)</label>
+    <div class="radio-group horizontal">
+      <label class="radio-item">
+        <input type="radio" name="r21_prov" value="ble" data-field="r21_prov" data-required checked>
+        <div><div class="radio-label">BLE + мобильное приложение</div><div class="radio-desc">Персонал сканирует QR-код, вводит WiFi-пароль. Удобно. Echo/Nest/Yandex.</div></div>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r21_prov" value="wps" data-field="r21_prov" data-required>
+        <div><div class="radio-label">WPS</div><div class="radio-desc">Нажать кнопку на роутере. Просто, но небезопасно (deprecated).</div></div>
+      </label>
+    </div>
+    <label class="form-label mt-12">Проводной Ethernet</label>
+    <div class="radio-group horizontal">
+      <label class="radio-item">
+        <input type="radio" name="r21_eth" value="no" data-field="r21_eth" data-required checked>
+        <div><div class="radio-label">Нет (только WiFi)</div><div class="radio-desc">Экономия места и стоимости. Стандарт для consumer устройств.</div></div>
+        <span class="radio-cost cost-low">Стандарт</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r21_eth" value="optional" data-field="r21_eth" data-required>
+        <div><div class="radio-label">Опционально (RJ45)</div><div class="radio-desc">Дифференциатор для B2B. Надёжнее в учреждениях с проводной сетью.</div></div>
+        <span class="radio-cost cost-mid">+$2 BOM</span>
+      </label>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r21_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block"><summary>Справка</summary><div class="help-content">
+      <p><strong>Почему dual-band критично:</strong> Немецкие дома престарелых имеют плотную WiFi-инфраструктуру — много сетей, помехи на 2.4 ГГц. 5 ГГц диапазон менее загружен. Аудиопоток для облачного STT = 24–48 кбит/с (Opus) — даже 802.11n справляется, но надёжность соединения критична для тревожной кнопки.</p>
+      <div class="competitor-badges">
+        <span class="badge-comp badge-echo">Echo Dot 5: 802.11ac dual-band + BT 5.0, USB-C 15W</span>
+        <span class="badge-comp badge-google">Nest Mini: 802.11ac + BT 5.0, проприетарный адаптер 15W</span>
+        <span class="badge-comp badge-apple">HomePod Mini: 802.11ac + BT 5.0 + UWB, 20W</span>
+        <span class="badge-comp badge-yandex">Yandex Station Mini 2: 802.11n dual + BT 4.1</span>
+      </div>
+      <p><strong>Рекомендуемые WiFi-чипы для BOM ≤ €40:</strong></p>
+      <table class="compare-table">
+        <tr><th>Чип</th><th>WiFi</th><th>BT</th><th>Цена @10K</th></tr>
+        <tr><td>Realtek RTL8821CS</td><td>802.11ac</td><td>BT 4.2</td><td>$2.0</td></tr>
+        <tr><td>Qualcomm QCA9377</td><td>802.11ac</td><td>BT 4.2</td><td>$3.0</td></tr>
+        <tr><td>MediaTek MT7921</td><td>802.11ax</td><td>BT 5.2</td><td>$3.5</td></tr>
+      </table>
+      <div class="help-sources">
+        <a href="https://www.wi-fi.org/discover-wi-fi/wi-fi-certified-6" target="_blank">[1] WiFi Alliance — WiFi 5 vs WiFi 6</a>
+        <a href="https://developer.amazon.com/en-US/alexa/alexa-voice-service/avs-device-sdk" target="_blank">[2] Alexa Voice Service — требования к сети</a>
+      </div>
+    </div></details>
+  </div>
+</div>
+
+<!-- R24 Питание -->
+<div class="section-card electronics" id="r24">
+  <div class="section-header">
+    <div class="section-num">R24</div>
+    <div class="section-title-block">
+      <div class="section-title">Электропитание <span class="badge-new">НОВОЕ</span></div>
+      <div class="section-subtitle">Тип разъёма, напряжение, бюджет мощности</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="error-fix-banner">
+      <span class="icon">⚠️</span>
+      <div>Оригинал указывает «&lt; 25W active» — <strong>значение завышено в 2.5 раза</strong>. Реалистичный бюджет: ≤ 10 Вт (включая запас 30%).</div>
+    </div>
+    <label class="form-label">Тип разъёма питания</label>
+    <div class="radio-group">
+      <label class="radio-item">
+        <input type="radio" name="r24_connector" value="barrel" data-field="r24_connector" data-required>
+        <div><div class="radio-label">Barrel Jack 5.5×2.1 мм (12V)</div><div class="radio-desc">Надёжный, привычный для учреждений. Сложнее случайно выдернуть. Yandex Station, большинство IoT-устройств.</div></div>
+        <span class="radio-cost cost-low">Дёшево</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r24_connector" value="usbc" data-field="r24_connector" data-required>
+        <div><div class="radio-label">USB-C Power Delivery (9V/1.67A = 15W)</div><div class="radio-desc">Современно, универсально. Echo Dot 5, Nest Mini. Легко выдернуть, зато легко заменить кабель.</div></div>
+        <span class="radio-cost cost-mid">Современный</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r24_connector" value="open" data-field="r24_connector" data-required>
+        <div><div class="radio-label">Не определено (на усмотрение ODM)</div><div class="radio-desc">Укажите ограничения, ODM выбирает оптимально под BOM.</div></div>
+        <span class="radio-cost cost-low">Гибко</span>
+      </label>
+    </div>
+    <div class="stepper-wrap mt-12">
+      <label class="form-label">Максимальный бюджет мощности (вся система)</label>
+      <div class="stepper">
+        <button class="stepper-btn stepper-dec" type="button">−</button>
+        <input type="number" class="stepper-input" id="r24_pwr" data-field="r24_pwr" min="5" max="20" step="1" value="10" data-required>
+        <span class="stepper-unit">Вт</span>
+        <button class="stepper-btn stepper-inc" type="button">+</button>
+      </div>
+      <div class="stepper-range">5 Вт → 20 Вт</div>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r24_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block"><summary>Справка</summary><div class="help-content">
+      <p><strong>Разбивка реалистичного бюджета мощности (10 Вт с запасом):</strong></p>
+      <table class="compare-table">
+        <tr><th>Подсистема</th><th>Idle</th><th>Active</th></tr>
+        <tr><td>SoC (ARM A53 quad)</td><td>0.5W</td><td>2.5W</td></tr>
+        <tr><td>Audio DSP + Class-D усилитель</td><td>0.2W</td><td>3.0W</td></tr>
+        <tr><td>WiFi 802.11ac</td><td>0.1W</td><td>1.2W</td></tr>
+        <tr><td>Микрофоны 7× MEMS</td><td>0.05W</td><td>0.15W</td></tr>
+        <tr><td>LED + Secure Element</td><td>0.01W</td><td>0.15W</td></tr>
+        <tr><td><strong>Итого + 30% запас</strong></td><td><strong>~1.0W</strong></td><td><strong>~9.0W</strong></td></tr>
+      </table>
+      <div class="competitor-badges">
+        <span class="badge-comp badge-echo">Echo Dot 5: 15W адаптер, потребляет ~5–7W активно</span>
+        <span class="badge-comp badge-google">Nest Mini: 15W адаптер, ~4–5W активно</span>
+        <span class="badge-comp badge-apple">HomePod Mini: 20W адаптер, ~8–10W активно</span>
+      </div>
+      <div class="help-sources">
+        <a href="https://www.amazon.com/dp/B09B8XYXRS" target="_blank">[1] Echo Dot 5 — характеристики питания</a>
+      </div>
+    </div></details>
+  </div>
+</div>
+
+<!-- R25 Память -->
+<div class="section-card electronics" id="r25">
+  <div class="section-header">
+    <div class="section-num">R25</div>
+    <div class="section-title-block">
+      <div class="section-title">Память и хранилище <span class="badge-new">НОВОЕ</span> <span class="badge-fixed">ИСПРАВЛЕНИЕ</span></div>
+      <div class="section-subtitle">Критическая ошибка в оригинале: 256 MB SRAM → должно быть DRAM</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="error-fix-banner">
+      <span class="icon">🔴</span>
+      <div><strong>Критическая ошибка в оригинале:</strong> «256 MB <a class="term-link" data-term="SRAM">SRAM</a>» — <a class="term-link" data-term="SRAM">SRAM</a> такого объёма не существует (максимум 4 МБ у реальных чипов, стоимость сотни $). Должно быть: 256 MB <a class="term-link" data-term="DRAM">DRAM</a> (DDR3L/LPDDR4). Это стандартный тип памяти в смартфонах и смарт-колонках, цена ~$0.8–1.5 на объём 256 МБ.</div>
+    </div>
+    <label class="form-label">Объём оперативной памяти (<a class="term-link" data-term="DRAM">DRAM</a> DDR3L / LPDDR4)</label>
+    <div class="radio-group horizontal">
+      <label class="radio-item">
+        <input type="radio" name="r25_ram" value="256" data-field="r25_ram" data-required>
+        <div><div class="radio-label">256 МБ</div><div class="radio-desc">Минимум для Linux + DSP-алгоритмы. Напряжённо.</div></div>
+        <span class="radio-cost cost-mid">~$0.8</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r25_ram" value="512" data-field="r25_ram" data-required checked>
+        <div><div class="radio-label">512 МБ (рекомендовано)</div><div class="radio-desc">Комфортно для Linux + нейросеть + буферы. Echo Dot, Nest Mini.</div></div>
+        <span class="radio-cost cost-mid">~$1.2</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r25_ram" value="1024" data-field="r25_ram" data-required>
+        <div><div class="radio-label">1 ГБ</div><div class="radio-desc">С запасом для будущих алгоритмов. HomePod Mini: 1 ГБ.</div></div>
+        <span class="radio-cost cost-high">~$2.0</span>
+      </label>
+    </div>
+    <label class="form-label mt-12">Флеш-память (<a class="term-link" data-term="eMMC">eMMC</a>)</label>
+    <div class="radio-group horizontal">
+      <label class="radio-item">
+        <input type="radio" name="r25_flash" value="512" data-field="r25_flash" data-required>
+        <div><div class="radio-label">512 МБ</div><div class="radio-desc">Минимум: ОС + dual-partition OTA + базовые модели.</div></div>
+        <span class="radio-cost cost-low">~$0.5</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r25_flash" value="1024" data-field="r25_flash" data-required checked>
+        <div><div class="radio-label">1 ГБ (рекомендовано)</div><div class="radio-desc">Достаточно для ОС + приложения + нейросетевые модели.</div></div>
+        <span class="radio-cost cost-mid">~$0.8</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r25_flash" value="4096" data-field="r25_flash" data-required>
+        <div><div class="radio-label">4+ ГБ</div><div class="radio-desc">Большие модели, аудио-журналы локально. Echo Dot 5: 4 ГБ.</div></div>
+        <span class="radio-cost cost-high">~$1.5</span>
+      </label>
+    </div>
+    <div class="stepper-wrap mt-12">
+      <label class="form-label">Объём <a class="term-link" data-term="NVM">NVM</a>-буфера для аварийных записей</label>
+      <div class="stepper">
+        <button class="stepper-btn stepper-dec" type="button">−</button>
+        <input type="number" class="stepper-input" id="r25_nvm" data-field="r25_nvm" min="16" max="128" step="16" value="32" data-required>
+        <span class="stepper-unit">МБ</span>
+        <button class="stepper-btn stepper-inc" type="button">+</button>
+      </div>
+      <div class="stepper-range">16 МБ (~7 мин @ Opus) → 128 МБ (~55 мин)</div>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r25_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block"><summary>Справка</summary><div class="help-content">
+      <p><strong>Почему 512 МБ DRAM минимум:</strong> Встроенный Linux (Buildroot/OpenWRT) занимает ~40–60 МБ. Буферы беамформинга 7-канального аудио при 16 кГц = ~20 МБ. Нейросетевой VAD (Silero) = ~8–15 МБ модель + буфер. 256 МБ — работает, но без запаса на обновления.</p>
+      <div class="competitor-badges">
+        <span class="badge-comp badge-echo">Echo Dot 4/5: 512 МБ RAM + 4 ГБ eMMC</span>
+        <span class="badge-comp badge-yandex">Yandex Station Mini: 512 МБ RAM + 4 ГБ eMMC</span>
+        <span class="badge-comp badge-google">Nest Mini: 512 МБ RAM + 1 ГБ флеш</span>
+      </div>
+      <div class="help-sources">
+        <a href="https://www.ifixit.com/Teardown/Amazon+Echo+Dot+4th+Generation+Teardown/136892" target="_blank">[1] Echo Dot 4 Teardown — память iFixit</a>
+      </div>
+    </div></details>
+  </div>
+</div>
+
+<!-- R27 Тепловой режим -->
+<div class="section-card electronics" id="r27">
+  <div class="section-header">
+    <div class="section-num">R27</div>
+    <div class="section-title-block">
+      <div class="section-title">Тепловой режим и условия эксплуатации <span class="badge-new">НОВОЕ</span></div>
+      <div class="section-subtitle">Безвентиляторная конструкция — гигиена + тишина</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <label class="form-label">Система охлаждения</label>
+    <div class="radio-group horizontal">
+      <label class="radio-item">
+        <input type="radio" name="r27_cooling" value="passive" data-field="r27_cooling" data-required checked>
+        <div><div class="radio-label">Пассивная (обязательно)</div><div class="radio-desc">Нет вентилятора = нет шума, нет загрязнения, нет механического износа. Стандарт всех смарт-колонок.</div></div>
+        <span class="radio-cost cost-low">Обязательно</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r27_cooling" value="active" data-field="r27_cooling" data-required>
+        <div><div class="radio-label">Активная (вентилятор)</div><div class="radio-desc">Не рекомендуется — шум, загрязнение, механический износ.</div></div>
+        <span class="radio-cost cost-high">Не рекомендуется</span>
+      </label>
+    </div>
+    <div class="stepper-wrap mt-12">
+      <label class="form-label">Макс. температура поверхности корпуса</label>
+      <div class="stepper">
+        <button class="stepper-btn stepper-dec" type="button">−</button>
+        <input type="number" class="stepper-input" id="r27_temp" data-field="r27_temp" min="40" max="75" step="5" value="50" data-required>
+        <span class="stepper-unit">°C</span>
+        <button class="stepper-btn stepper-inc" type="button">+</button>
+      </div>
+      <div class="stepper-range">40°C (комфорт) → 75°C (предел IEC)</div>
+    </div>
+    <div class="form-grid-2 mt-8">
+      <div>
+        <label class="form-label">Рабочая температура</label>
+        <select data-field="r27_op_temp">
+          <option value="0_40">0°C … +40°C (стандарт)</option>
+          <option value="0_45">0°C … +45°C (жаркий климат)</option>
+          <option value="minus5_40">-5°C … +40°C (с запасом)</option>
+        </select>
+      </div>
+      <div>
+        <label class="form-label">Влажность</label>
+        <select data-field="r27_humidity">
+          <option value="20_80">20–80% без конденсата</option>
+          <option value="10_90">10–90% без конденсата</option>
+        </select>
+      </div>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r27_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block"><summary>Справка</summary><div class="help-content">
+      <p><strong>Почему 50°C максимум:</strong> IEC 62368-1 допускает до 70–80°C для непластиковых поверхностей. Но пожилые люди с нарушенной болевой чувствительностью могут не заметить ожог при прикосновении к горячему корпусу. 50°C — субъективно «тёплый», не обжигает.</p>
+      <div class="competitor-badges">
+        <span class="badge-comp badge-echo">Echo Dot 5 @ 82 дБ: корпус ~38–42°C</span>
+        <span class="badge-comp badge-std">IEC 62368-1 Table 11: пластик ≤ 80°C</span>
+      </div>
+    </div></details>
+  </div>
+</div>
+
+<!-- ── ГРУППА Г: БЕЗОПАСНОСТЬ ─────────────────────────── -->
+
+<!-- R04 Автономная тревога -->
+<div class="section-card security" id="r04">
+  <div class="section-header">
+    <div class="section-num">R04</div>
+    <div class="section-title-block">
+      <div class="section-title">Автономное обнаружение экстренных ситуаций (Safe Mode)</div>
+      <div class="section-subtitle">Работает без облака — сохраняется при обрыве интернета</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value"><div class="label">Текущее требование</div>Локальный детектор ключевых слов + <a class="term-link" data-term="NVM">NVM</a>-буфер. Работает при отключении WiFi.</div>
+    <div class="accept-toggle">
+      <button class="accept-btn accept active">✓ Принять</button>
+      <button class="accept-btn change">✎ Изменить</button>
+    </div>
+    <div class="change-input-wrap">
+      <input type="text" data-field="r04_custom" placeholder="уточнение требования...">
+    </div>
+    <label class="form-label mt-12">Функции в автономном режиме</label>
+    <div class="checkbox-group">
+      <label class="checkbox-item"><input type="checkbox" data-field="r04_sos" checked> <div><div class="checkbox-label">Обнаружение тревожных слов (SOS, помогите, Hilfe)</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="r04_fall" checked> <div><div class="checkbox-label">Детектор падения (звук удара + тишина)</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="r04_buffer" checked> <div><div class="checkbox-label">Запись в NVM-буфер при обрыве WiFi</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="r04_alert"> <div><div class="checkbox-label">Локальный звуковой сигнал тревоги (без облака)</div></div></label>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r04_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block"><summary>Справка</summary><div class="help-content">
+      <p><strong>Простыми словами:</strong> Если интернет пропал (плановые работы, сбой провайдера), устройство всё равно должно реагировать на «помогите». Для этого в чипе хранится маленькая локальная модель распознавания ключевых слов. Аварийная запись — на внутреннюю флеш-память, передаётся при восстановлении связи.</p>
+      <div class="help-sources">
+        <a href="https://developer.amazon.com/en-US/alexa/alexa-voice-service/avs-offline" target="_blank">[1] Alexa Offline режим — документация</a>
+      </div>
+    </div></details>
+  </div>
+</div>
+
+<!-- R13 OTA -->
+<div class="section-card security" id="r13">
+  <div class="section-header">
+    <div class="section-num">R13</div>
+    <div class="section-title-block">
+      <div class="section-title">Надёжность <a class="term-link" data-term="OTA">OTA</a>-обновлений</div>
+      <div class="section-subtitle">Dual-partition + автооткат — устройство нельзя «окирпичить» обновлением</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value"><div class="label">Текущее требование</div>Dual Partition + Automatic Rollback, без вмешательства пользователя</div>
+    <div class="accept-toggle">
+      <button class="accept-btn accept active">✓ Принять</button>
+      <button class="accept-btn change">✎ Изменить</button>
+    </div>
+    <div class="change-input-wrap">
+      <input type="text" data-field="r13_custom" placeholder="уточнение...">
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r13_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block"><summary>Справка</summary><div class="help-content">
+      <p><strong>Простыми словами:</strong> Устройство имеет два слота прошивки (A и B). При обновлении новая версия записывается в неактивный слот. Если устройство не загружается после обновления — автоматически возвращается к предыдущей версии. Это стандарт для всех серьёзных IoT-устройств (Android A/B OTA с 2016 года).</p>
+      <div class="competitor-badges">
+        <span class="badge-comp badge-echo">Amazon Echo: A/B OTA, автооткат</span>
+        <span class="badge-comp badge-std">Android A/B система обновлений (AOSP)</span>
+      </div>
+    </div></details>
+  </div>
+</div>
+
+<!-- R15 HRoT -->
+<div class="section-card security" id="r15">
+  <div class="section-header">
+    <div class="section-num">R15</div>
+    <div class="section-title-block">
+      <div class="section-title">Hardware Root of Trust (<a class="term-link" data-term="HSM">Secure Element</a>)</div>
+      <div class="section-subtitle">Защита от подмены прошивки и атак на производстве</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value"><div class="label">Текущее требование</div>ATECC608A (Microchip) + RSA-4096 подпись загрузчика + защита отладочных интерфейсов + антироллбэк</div>
+    <div class="accept-toggle">
+      <button class="accept-btn accept active">✓ Принять</button>
+      <button class="accept-btn change">✎ Изменить</button>
+    </div>
+    <div class="change-input-wrap">
+      <label class="form-label">Альтернативный Secure Element</label>
+      <select data-field="r15_se_alt">
+        <option value="atecc608a">ATECC608A (Microchip) — указан в спецификации</option>
+        <option value="optiga">Infineon OPTIGA Trust M — совместимый альтернатив</option>
+        <option value="se050">NXP SE050 — совместимый альтернатив</option>
+        <option value="other">Другой (указать в комментарии)</option>
+      </select>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r15_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block"><summary>Справка</summary><div class="help-content">
+      <p><strong>Простыми словами:</strong> Secure Element — это маленький чип-сейф на плате. В нём хранятся ключи шифрования, которые невозможно извлечь даже при физическом доступе к устройству. Без него злоумышленник может установить фальшивую прошивку или похитить API-ключи для доступа к облаку.</p>
+      <p><strong>Важно:</strong> Ключи генерируются на вашем оборудовании (HSM), а не на китайском заводе. Это требование R17.</p>
+      <div class="help-sources">
+        <a href="https://www.microchip.com/en-us/product/atecc608a" target="_blank">[1] ATECC608A — Microchip</a>
+        <a href="https://www.infineon.com/cms/en/product/security-smart-card-solutions/optiga-embedded-security-solutions/optiga-trust/" target="_blank">[2] Infineon OPTIGA Trust M</a>
+      </div>
+    </div></details>
+  </div>
+</div>
+
+<!-- R16 R17 краткие -->
+<div class="section-card security" id="r16">
+  <div class="section-header">
+    <div class="section-num">R16 + R17</div>
+    <div class="section-title-block">
+      <div class="section-title">Защищённое хранение ключей и Secure Provisioning</div>
+      <div class="section-subtitle">Шифрование API-ключей + защита от компрометации на заводе</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value"><div class="label">R16: Защита API-ключей</div>Шифрование через Secure Element. AES-256-GCM.</div>
+    <div class="spec-value"><div class="label">R17: Secure Provisioning</div>Ключи генерируются на нашем HSM (не в Китае). SPS-сервис для программирования на заводе.</div>
+    <div class="accept-toggle">
+      <button class="accept-btn accept active">✓ Принять оба</button>
+      <button class="accept-btn change">✎ Изменить</button>
+    </div>
+    <div class="change-input-wrap">
+      <input type="text" data-field="r1617_custom" placeholder="уточнение...">
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r1617_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block"><summary>Справка</summary><div class="help-content">
+      <p><strong>Почему ключи НЕ должны генерироваться в Китае:</strong> Если ODM создаёт ключи на заводе — у завода есть копия. Любой сотрудник или инсайдер может использовать ключи для подключения нелегальных устройств к вашей инфраструктуре. HSM (Hardware Security Module) — аппаратный сейф у вас, куда завод обращается через зашифрованный API.</p>
+      <p><strong>Стоимость:</strong> HSM (Thales Luna): $10–50K единовременно. SPS API-запрос: &lt; $0.01. Итого &lt; $8.10 на устройство согласно Unit Economics.</p>
+    </div></details>
+  </div>
+</div>
+
+<!-- ── ГРУППА Д: КОНФИДЕНЦИАЛЬНОСТЬ ─────────────────────── -->
+
+<!-- R20 Privacy -->
+<div class="section-card privacy" id="r20">
+  <div class="section-header">
+    <div class="section-num">R20</div>
+    <div class="section-title-block">
+      <div class="section-title">Конфиденциальность и прозрачность (<a class="term-link" data-term="GDPR">GDPR</a>) <span class="badge-new">НОВОЕ v3.6</span></div>
+      <div class="section-subtitle">LED-индикатор, голосовое уведомление, физический выключатель</div>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="subsection">
+      <div class="subsection-header">А. LED-индикатор активности микрофона</div>
+      <div class="subsection-body">
+        <label class="form-label">Цвет LED (470 нм по спецификации = синий)</label>
+        <div class="radio-group horizontal">
+          <label class="radio-item"><input type="radio" name="r20_led_color" value="blue" data-field="r20_led_color" checked><span class="radio-label">🔵 Синий (рекомендовано)</span></label>
+          <label class="radio-item"><input type="radio" name="r20_led_color" value="white" data-field="r20_led_color"><span class="radio-label">⚪ Белый</span></label>
+          <label class="radio-item"><input type="radio" name="r20_led_color" value="ring" data-field="r20_led_color"><span class="radio-label">🔵🔴 Кольцо (синий/красный)</span></label>
+        </div>
+        <label class="form-label mt-8">Режимы</label>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" data-field="r20_led_on" checked> <div><div class="checkbox-label">Постоянно включён при записи</div></div></label>
+          <label class="checkbox-item"><input type="checkbox" data-field="r20_led_blink" checked> <div><div class="checkbox-label">Мигание 1 Гц при ожидании команды (wake-word активирован)</div></div></label>
+          <label class="checkbox-item"><input type="checkbox" data-field="r20_led_off" checked> <div><div class="checkbox-label">Выключен при физически отключённом микрофоне</div></div></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-header">Б. Физический выключатель микрофона</div>
+      <div class="subsection-body">
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="r20_switch" value="slider" data-field="r20_switch" data-required checked>
+            <div><div class="radio-label">Механический слайдер (рекомендовано)</div><div class="radio-desc">Физически разрывает цепь микрофона. Не может быть взломан программно. Пожилой видит положение «выключено» — уверен в приватности.</div></div>
+            <span class="radio-cost cost-low">Надёжно</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="r20_switch" value="button" data-field="r20_switch" data-required>
+            <div><div class="radio-label">Кнопка с подтверждением LED</div><div class="radio-desc">Программное отключение с визуальным подтверждением (красный LED = выключено). Удобнее, но теоретически уязвимее.</div></div>
+            <span class="radio-cost cost-mid">Удобнее</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-header">В. Соответствие GDPR</div>
+      <div class="subsection-body">
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" data-field="r20_gdpr_del" checked> <div><div class="checkbox-label">Право на удаление (Art. 17): удаление в течение 30 дней по запросу</div></div></label>
+          <label class="checkbox-item"><input type="checkbox" data-field="r20_gdpr_port" checked> <div><div class="checkbox-label">Право на портабельность (Art. 20): экспорт данных в JSON/CSV</div></div></label>
+          <label class="checkbox-item"><input type="checkbox" data-field="r20_gdpr_consent" checked> <div><div class="checkbox-label">Отзыв согласия (Art. 7): кнопка остановки облачной передачи</div></div></label>
+          <label class="checkbox-item"><input type="checkbox" data-field="r20_gdpr_audit" checked> <div><div class="checkbox-label">Журнал аудита (Art. 32): кто и когда обращался к данным</div></div></label>
+          <label class="checkbox-item"><input type="checkbox" data-field="r20_gdpr_min" checked> <div><div class="checkbox-label">Минимизация данных (Art. 5): нет биометрии, нет GPS, только аудио и временны́е метки</div></div></label>
+        </div>
+      </div>
+    </div>
+
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r20_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block"><summary>Справка</summary><div class="help-content">
+      <p><strong>Почему физический выключатель важен:</strong> Amazon Echo имеет кнопку mute, но она программная. Пользователь не может убедиться, что микрофон «действительно выключен». Физический разрыв цепи — единственный способ дать пожилому пациенту 100% уверенность в приватности. Это также снижает юридические риски при работе в Германии.</p>
+      <div class="competitor-badges">
+        <span class="badge-comp badge-echo">Echo: кнопка (программная, LED красный = muted)</span>
+        <span class="badge-comp badge-apple">HomePod Mini: нет физического mute</span>
+        <span class="badge-comp badge-std">GDPR Art. 25: Privacy by Design — встроенная в продукт</span>
+      </div>
+      <div class="help-sources">
+        <a href="https://gdpr.eu/article-17-right-to-be-forgotten/" target="_blank">[1] GDPR Art. 17 — Право на удаление</a>
+        <a href="https://gdpr.eu/article-25-data-protection-by-design/" target="_blank">[2] GDPR Art. 25 — Privacy by Design</a>
+      </div>
+    </div></details>
+  </div>
+</div>
+
+<!-- ── ГРУППА Е: КОНСТРУКТИВ ──────────────────────────── -->
+
+<!-- R10 Tamper -->
+<div class="section-card mechanical" id="r10">
+  <div class="section-header">
+    <div class="section-num">R10</div>
+    <div class="section-title-block">
+      <div class="section-title">Защита от несанкционированного вскрытия (Tamper-Proof)</div>
+      <div class="section-subtitle">Без видимых винтов — защита от кражи компонентов и модификации</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value"><div class="label">Текущее требование</div>Security Torx или сварка/склейка корпуса — без видимых стандартных винтов</div>
+    <label class="form-label">Метод крепления корпуса</label>
+    <div class="radio-group">
+      <label class="radio-item">
+        <input type="radio" name="r10_method" value="torx" data-field="r10_method" data-required>
+        <div><div class="radio-label">Security Torx (Tamper-resistant)</div><div class="radio-desc">Специальные шурупы — можно открыть сервисным инструментом. Удобно для ремонта.</div></div>
+        <span class="radio-cost cost-low">Обслуживаемо</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="r10_method" value="glued" data-field="r10_method" data-required checked>
+        <div><div class="radio-label">Ультразвуковая сварка / клей</div><div class="radio-desc">Дешевле, надёжнее защита. Нельзя вскрыть без разрушения корпуса. Стандарт Echo Dot, HomePod Mini.</div></div>
+        <span class="radio-cost cost-low">Дешевле</span>
+      </label>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r10_comment" placeholder="Комментарий команды..."></textarea></div>
+  </div>
+</div>
+
+<!-- R11 IP54 -->
+<div class="section-card mechanical" id="r11">
+  <div class="section-header">
+    <div class="section-num">R11</div>
+    <div class="section-title-block">
+      <div class="section-title">Защита от загрязнения и дезинфекции (<a class="term-link" data-term="IP54">IP54</a>)</div>
+      <div class="section-subtitle">Устройство регулярно дезинфицируется в учреждениях</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value"><div class="label">Текущее требование</div>IP54 + устойчивость к: 70% этанол, 0.5% хлор, 3% H₂O₂</div>
+    <div class="accept-toggle">
+      <button class="accept-btn accept active">✓ Принять</button>
+      <button class="accept-btn change">✎ Расширить</button>
+    </div>
+    <div class="change-input-wrap">
+      <label class="form-label">Повышенная степень защиты</label>
+      <select data-field="r11_ip_level">
+        <option value="ip54">IP54 (текущее — пыль частично, брызги)</option>
+        <option value="ip65">IP65 (полная пылезащита, струя воды)</option>
+        <option value="ip67">IP67 (погружение 1м/30мин)</option>
+      </select>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r11_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block"><summary>Справка</summary><div class="help-content">
+      <p><strong>Почему дезинфекция важна:</strong> В немецких домах престарелых используют этанол и хлорсодержащие дезинфекторы. Обычный пластик корпуса может деградировать, краска — растворяться. Необходим стойкий ABS или PC+ABS пластик с соответствующим покрытием.</p>
+      <div class="competitor-badges">
+        <span class="badge-comp badge-echo">Echo Dot: не имеет официального IP рейтинга</span>
+        <span class="badge-comp badge-std">IP54 — достаточно для брызг при уборке (не полив)</span>
+      </div>
+    </div></details>
+  </div>
+</div>
+
+<!-- R14 Производство -->
+<div class="section-card mechanical" id="r14">
+  <div class="section-header">
+    <div class="section-num">R14</div>
+    <div class="section-title-block">
+      <div class="section-title">Поддержка серийного производства и сертификация</div>
+      <div class="section-subtitle">&lt; 5 минут на устройство, &gt; 99.5% выход годных, CE</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value"><div class="label">Текущее требование</div>&lt; 5 мин/устройство; &gt; 99.5% выход; CE (LVD + EMC + RED); Secure Provisioning на линии</div>
+    <div class="form-grid-2">
+      <div class="stepper-wrap">
+        <label class="form-label">Макс. время тестирования на линии</label>
+        <div class="stepper">
+          <button class="stepper-btn stepper-dec" type="button">−</button>
+          <input type="number" class="stepper-input" id="r14_time" data-field="r14_time" min="2" max="15" step="1" value="5" data-required>
+          <span class="stepper-unit">мин</span>
+          <button class="stepper-btn stepper-inc" type="button">+</button>
+        </div>
+        <div class="stepper-range">2 → 15 мин</div>
+      </div>
+      <div class="stepper-wrap">
+        <label class="form-label">Минимальный выход годных</label>
+        <div class="stepper">
+          <button class="stepper-btn stepper-dec" type="button">−</button>
+          <input type="number" class="stepper-input" id="r14_yield" data-field="r14_yield" min="95" max="99.9" step="0.1" value="99.5" data-required>
+          <span class="stepper-unit">%</span>
+          <button class="stepper-btn stepper-inc" type="button">+</button>
+        </div>
+        <div class="stepper-range">95% → 99.9%</div>
+      </div>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r14_comment" placeholder="Комментарий команды..."></textarea></div>
+  </div>
+</div>
+
+<!-- ── ГРУППА Ж: ВЫЧИСЛЕНИЯ ───────────────────────────── -->
+
+<div class="section-card compute" id="rcomp">
+  <div class="section-header">
+    <div class="section-num">DSP</div>
+    <div class="section-title-block">
+      <div class="section-title">Вычислительные ресурсы (<a class="term-link" data-term="MFLOPS">MFLOPS</a>)</div>
+      <div class="section-subtitle">Требования к производительности SoC для аудио-обработки в реальном времени</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="spec-value"><div class="label">Текущее требование</div>40–50 MFLOPS суммарно: beamforming + dereverberation + noise suppression + VAD</div>
+    <div class="stepper-wrap">
+      <label class="form-label">Целевые вычислительные ресурсы</label>
+      <div class="stepper">
+        <button class="stepper-btn stepper-dec" type="button">−</button>
+        <input type="number" class="stepper-input" id="rcomp_mf" data-field="rcomp_mflops" min="20" max="100" step="5" value="50" data-required>
+        <span class="stepper-unit">MFLOPS</span>
+        <button class="stepper-btn stepper-inc" type="button">+</button>
+      </div>
+      <div class="stepper-range">20 MFLOPS (мин) → 100 MFLOPS (нейросети)</div>
+    </div>
+    <label class="form-label mt-8">Целевой SoC (System on Chip)</label>
+    <div class="radio-group">
+      <label class="radio-item">
+        <input type="radio" name="rcomp_soc" value="h618" data-field="rcomp_soc" data-required>
+        <div><div class="radio-label">Allwinner H618 (4×Cortex-A53 @ 1.5 ГГц)</div><div class="radio-desc">Доступен, хорошо поддерживается, встраиваемый Android/Linux. ~$3 @10K.</div></div>
+        <span class="radio-cost cost-low">$3 BOM</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="rcomp_soc" value="s905y4" data-field="rcomp_soc" data-required>
+        <div><div class="radio-label">Amlogic S905Y4 (4×Cortex-A35 @ 1.8 ГГц)</div><div class="radio-desc">Быстрее, используется в Android TV устройствах. ~$4 @10K.</div></div>
+        <span class="radio-cost cost-mid">$4 BOM</span>
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="rcomp_soc" value="odm_choice" data-field="rcomp_soc" data-required checked>
+        <div><div class="radio-label">На усмотрение ODM (соответствующий требованиям)</div><div class="radio-desc">ODM выбирает оптимальный SoC из своей цепочки поставок — чаще всего дешевле.</div></div>
+        <span class="radio-cost cost-low">Оптимально</span>
+      </label>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="rcomp_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block"><summary>Справка</summary><div class="help-content">
+      <p><strong>Разбивка 50 MFLOPS:</strong></p>
+      <table class="compare-table">
+        <tr><th>Функция</th><th>MFLOPS</th><th>Алгоритм</th></tr>
+        <tr><td>Beamforming (7 мкф, MVDR)</td><td>10–15</td><td>MVDR/GSC</td></tr>
+        <tr><td>Dereverberation</td><td>15–20</td><td>Слепая идентификация (опция B)</td></tr>
+        <tr><td>Шумоподавление</td><td>5–8</td><td>Wiener filter + спект. вычитание</td></tr>
+        <tr><td>VAD</td><td>5–10</td><td>Silero VAD (нейросеть)</td></tr>
+        <tr><td><strong>Итого</strong></td><td><strong>35–53</strong></td><td>—</td></tr>
+      </table>
+      <p>ARM Cortex-A53 @ 1.5 ГГц обеспечивает ~10–15 GFLOPS — в 200× раз больше требуемого. Нагрузка DSP &lt; 5% CPU.</p>
+    </div></details>
+  </div>
+</div>
+
+<!-- ── ГРУППА З: СТОИМОСТЬ ───────────────────────────── -->
+
+<!-- R28 BOM -->
+<div class="section-card production" id="r28">
+  <div class="section-header">
+    <div class="section-num">R28</div>
+    <div class="section-title-block">
+      <div class="section-title">Целевая стоимость <a class="term-link" data-term="BOM">BOM</a> и производство <span class="badge-new">НОВОЕ</span></div>
+      <div class="section-subtitle">Конкурентная цена — основа бизнес-модели</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="form-grid-2">
+      <div class="stepper-wrap">
+        <label class="form-label">Целевой BOM (компоненты)</label>
+        <div class="stepper">
+          <button class="stepper-btn stepper-dec" type="button">−</button>
+          <input type="number" class="stepper-input" id="r28_bom" data-field="r28_bom" min="20" max="80" step="5" value="40" data-required>
+          <span class="stepper-unit">€</span>
+          <button class="stepper-btn stepper-inc" type="button">+</button>
+        </div>
+        <div class="stepper-range">€20 → €80</div>
+      </div>
+      <div class="number-wrap">
+        <label class="form-label">Пилотная партия (шт.)</label>
+        <input type="number" data-field="r28_pilot" value="200" min="50" max="10000">
+      </div>
+    </div>
+    <label class="form-label mt-8">Годовой объём производства</label>
+    <div class="radio-group horizontal">
+      <label class="radio-item"><input type="radio" name="r28_volume" value="1k" data-field="r28_volume"><span class="radio-label">&lt; 1 000 шт/год</span></label>
+      <label class="radio-item"><input type="radio" name="r28_volume" value="5k" data-field="r28_volume" checked><span class="radio-label">5 000 шт/год</span></label>
+      <label class="radio-item"><input type="radio" name="r28_volume" value="25k" data-field="r28_volume"><span class="radio-label">25 000+ шт/год</span></label>
+    </div>
+    <label class="form-label mt-12">Требование вторых источников (критические компоненты)</label>
+    <div class="checkbox-group">
+      <label class="checkbox-item"><input type="checkbox" data-field="r28_2src_se" checked><div><div class="checkbox-label">Secure Element (ATECC608A → Infineon/NXP как альтернатива)</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="r28_2src_soc"><div><div class="checkbox-label">SoC (одобрить альтернативный процессор)</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="r28_2src_wifi" checked><div><div class="checkbox-label">WiFi-чип (несколько одобренных вендоров)</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="r28_2src_mic"><div><div class="checkbox-label">MEMS микрофоны (Knowles / TDK / GoerTek)</div></div></label>
+    </div>
+    <span class="comment-toggle">▼ Добавить комментарий</span>
+    <div class="comment-area"><textarea data-field="r28_comment" placeholder="Комментарий команды..."></textarea></div>
+    <details class="help-block"><summary>Справка</summary><div class="help-content">
+      <p><strong>Структура BOM €40 (оценка):</strong></p>
+      <table class="compare-table">
+        <tr><th>Компонент</th><th>Стоимость @5K</th></tr>
+        <tr><td>SoC (Allwinner H618)</td><td>$3–4</td></tr>
+        <tr><td>DRAM 512 МБ LPDDR4</td><td>$1.2</td></tr>
+        <tr><td>eMMC 1 ГБ</td><td>$0.8</td></tr>
+        <tr><td>WiFi+BT (RTL8821CS)</td><td>$2.0</td></tr>
+        <tr><td>Secure Element (ATECC608A)</td><td>$1.5</td></tr>
+        <tr><td>7× MEMS мкф (GoerTek)</td><td>$3.5</td></tr>
+        <tr><td>Динамик 50мм + усилитель</td><td>$3–5</td></tr>
+        <tr><td>Корпус + механика</td><td>$5–8</td></tr>
+        <tr><td>PCB + сборка (PCBA)</td><td>$5–7</td></tr>
+        <tr><td>БП адаптер + кабель</td><td>$2–3</td></tr>
+        <tr><td>Сертификация CE (амортиз.)</td><td>$1–2</td></tr>
+        <tr><td><strong>Итого ориентировочно</strong></td><td><strong>~$28–37 ≈ €26–35</strong></td></tr>
+      </table>
+      <p>С учётом overhead (брак, упаковка, прибыль ODM) → реальная factory gate ≈ €38–45. Целевой BOM €40 — достижимо при 5K+ шт/год.</p>
+      <div class="help-sources">
+        <a href="https://emai-internal/unit-economics" target="_blank">[1] EMAI Unit Economics (внутренний документ)</a>
+      </div>
+    </div></details>
+  </div>
+</div>
+
+<!-- ── ЧЕКЛИСТ ODM ───────────────────────────────────── -->
+
+<div class="section-card production" id="checklist">
+  <div class="section-header">
+    <div class="section-num">✓</div>
+    <div class="section-title-block">
+      <div class="section-title">Чеклист поставки для ODM</div>
+      <div class="section-subtitle">Что ODM должен предоставить для приёмки</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <label class="form-label">Механика и акустика</label>
+    <div class="checkbox-group">
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_comsol"><div><div class="checkbox-label">COMSOL FEA симуляция (резонансный анализ корпуса)</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_freq_resp"><div><div class="checkbox-label">Измерение АЧХ прототипа (100–12500 Гц)</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_group_delay"><div><div class="checkbox-label">Отчёт групповой задержки (&lt; 1 мс @ 2 кГц)</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_mic_geometry"><div><div class="checkbox-label">Геометрия массива микрофонов (4–8 мкф, ≤ 28.5 мм шаг)</div></div></label>
+    </div>
+    <label class="form-label mt-8">Электроника и DSP</label>
+    <div class="checkbox-group">
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_eq"><div><div class="checkbox-label">Реализация параметрического EQ (4–6 полос)</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_vad"><div><div class="checkbox-label">Реализация VAD (&gt; 95% TP, &lt; 2% FP)</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_dereverb"><div><div class="checkbox-label">Реализация дереверберации (выбранная опция A/B/C)</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_agc"><div><div class="checkbox-label">Реализация AGC (окно 10–30 мс)</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_led"><div><div class="checkbox-label">Прошивка LED-индикатора конфиденциальности</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_voice_notify"><div><div class="checkbox-label">Предзапись голосового уведомления (немецкий язык)</div></div></label>
+    </div>
+    <label class="form-label mt-8">Тестирование и валидация</label>
+    <div class="checkbox-group">
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_32tests"><div><div class="checkbox-label">Все 32 приёмочных теста ПРОЙДЕНЫ (с документацией)</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_farfield"><div><div class="checkbox-label">Тест дальнего поля (усиление, DI, пространственное разрешение)</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_cpu_load"><div><div class="checkbox-label">Тест нагрузки ЦП (&lt; 80%, &lt; 256 МБ RAM, 1 час без дропов)</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_privacy_tests"><div><div class="checkbox-label">Тесты конфиденциальности (LED, уведомление, выключатель)</div></div></label>
+    </div>
+    <label class="form-label mt-8">Безопасность и сертификация</label>
+    <div class="checkbox-group">
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_hrot"><div><div class="checkbox-label">Hardware Root of Trust (Secure Element + загрузчик)</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_sps"><div><div class="checkbox-label">Клиент Secure Provisioning Service</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_ce"><div><div class="checkbox-label">CE Декларация соответствия (LVD/RED/EMC)</div></div></label>
+      <label class="checkbox-item"><input type="checkbox" data-field="cl_iec"><div><div class="checkbox-label">Отчёт IEC 62368-1 (сторонняя лаборатория ISO/IEC 17025)</div></div></label>
+    </div>
+  </div>
+</div>
+
+<!-- ── ПОДПИСИ ─────────────────────────────────────── -->
+
+<div class="section-card production" id="signatures">
+  <div class="section-header">
+    <div class="section-num">✍</div>
+    <div class="section-title-block">
+      <div class="section-title">Блок подписей и метаданные сессии</div>
+      <div class="section-subtitle">Фиксация результатов брейншторма</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="form-grid-3">
+      <div>
+        <label class="form-label">Дата сессии</label>
+        <input type="text" data-field="sig_date" class="signature-line" placeholder="ДД.ММ.ГГГГ">
+      </div>
+      <div>
+        <label class="form-label">Версия анкеты</label>
+        <input type="text" data-field="sig_version" class="signature-line" placeholder="v1.0">
+      </div>
+      <div>
+        <label class="form-label">Статус</label>
+        <select data-field="sig_status">
+          <option value="draft">Черновик (Draft)</option>
+          <option value="review">На рассмотрении</option>
+          <option value="approved">Утверждено</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-grid-3 mt-16">
+      <div class="signature-field">
+        <label>Имя участника 1</label>
+        <input type="text" data-field="sig1_name" class="signature-line" placeholder="Имя Фамилия">
+        <label style="margin-top:6px">Роль</label>
+        <input type="text" data-field="sig1_role" class="signature-line" placeholder="Роль в проекте">
+      </div>
+      <div class="signature-field">
+        <label>Имя участника 2</label>
+        <input type="text" data-field="sig2_name" class="signature-line" placeholder="Имя Фамилия">
+        <label style="margin-top:6px">Роль</label>
+        <input type="text" data-field="sig2_role" class="signature-line" placeholder="Роль в проекте">
+      </div>
+      <div class="signature-field">
+        <label>Имя участника 3</label>
+        <input type="text" data-field="sig3_name" class="signature-line" placeholder="Имя Фамилия">
+        <label style="margin-top:6px">Роль</label>
+        <input type="text" data-field="sig3_role" class="signature-line" placeholder="Роль в проекте">
+      </div>
+    </div>
+    <div class="textarea-wrap mt-16">
+      <label class="form-label">Общие решения и следующие шаги</label>
+      <textarea data-field="sig_decisions" rows="4" placeholder="Ключевые решения, принятые на сессии. Открытые вопросы. Следующие шаги..."></textarea>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- TOAST -->
+<div id="toast" class="toast">
+  <span class="toast-icon">✓</span>
+  <span class="toast-msg">Сохранено</span>
+</div>
+
+<script src="app.js"></script>
+<script>
+// Глоссарий — данные и генерация
+const GLOSSARY = [
+  { abbr: 'STI',      en: 'Speech Transmission Index',           ru: 'Индекс разборчивости речи. 0 = ничего не понять, 1 = идеально' },
+  { abbr: 'THD',      en: 'Total Harmonic Distortion',           ru: 'Гармонические искажения. Чем ниже %, тем чище звук' },
+  { abbr: 'AGC',      en: 'Automatic Gain Control',              ru: 'Авторегулировка громкости — выравнивает тихий и громкий голос' },
+  { abbr: 'MEMS',     en: 'Micro-Electro-Mechanical Systems',    ru: 'Миниатюрный микрофон на кремниевом чипе, как в смартфонах' },
+  { abbr: 'VAD',      en: 'Voice Activity Detection',            ru: 'Система распознавания: говорит ли сейчас человек или нет' },
+  { abbr: 'DSP',      en: 'Digital Signal Processor',            ru: 'Специальный чип для цифровой обработки звука' },
+  { abbr: 'DI',       en: 'Directivity Index',                   ru: 'Насколько хорошо микрофон слышит только вперёд, игнорируя боковые шумы' },
+  { abbr: 'SNR',      en: 'Signal-to-Noise Ratio',               ru: 'Соотношение голоса и шума. Чем выше, тем разборчивее запись' },
+  { abbr: 'AEC',      en: 'Acoustic Echo Cancellation',          ru: 'Устранение эха — когда микрофон не слышит собственный динамик' },
+  { abbr: 'OTA',      en: 'Over-The-Air',                        ru: 'Обновление прошивки по воздуху, без физического подключения' },
+  { abbr: 'NVM',      en: 'Non-Volatile Memory',                 ru: 'Энергонезависимая память — данные не теряются при отключении' },
+  { abbr: 'GDPR',     en: 'General Data Protection Regulation',  ru: 'Европейский закон о защите персональных данных' },
+  { abbr: 'SELV',     en: 'Safety Extra Low Voltage',            ru: 'Безопасное сверхнизкое напряжение (≤12В) — не опасно для жизни' },
+  { abbr: 'RIR',      en: 'Room Impulse Response',               ru: 'Акустический отпечаток комнаты — как звук отражается от стен' },
+  { abbr: 'STFT',     en: 'Short-Time Fourier Transform',        ru: 'Математический анализ звука по частотам во времени' },
+  { abbr: 'LSTM',     en: 'Long Short-Term Memory',              ru: 'Тип нейросети с памятью, распознаёт речевые паттерны' },
+  { abbr: 'AOP',      en: 'Acoustic Overload Point',             ru: 'Максимальный уровень звука, который микрофон переносит без искажений' },
+  { abbr: 'MFLOPS',   en: 'Million Floating-point Operations/sec', ru: 'Единица вычислительной мощности процессора' },
+  { abbr: 'BLE',      en: 'Bluetooth Low Energy',                ru: 'Bluetooth с малым энергопотреблением — для начальной настройки' },
+  { abbr: 'PDM',      en: 'Pulse Density Modulation',            ru: 'Цифровой выход микрофона MEMS — удобно для массивов' },
+  { abbr: 'EQ',       en: 'Equalizer',                           ru: 'Параметрический эквалайзер — коррекция АЧХ для компенсации акустики' },
+  { abbr: 'RED',      en: 'Radio Equipment Directive',           ru: 'Европейская директива по радиооборудованию (сертификация WiFi/BT)' },
+  { abbr: 'LVD',      en: 'Low Voltage Directive',               ru: 'Европейская директива по низковольтному оборудованию' },
+  { abbr: 'EMC',      en: 'Electromagnetic Compatibility',       ru: 'Электромагнитная совместимость — устройство не мешает другим' },
+  { abbr: 'SoC',      en: 'System on Chip',                      ru: 'Чип, объединяющий процессор, память и интерфейсы на одной микросхеме' },
+  { abbr: 'HSM',      en: 'Hardware Security Module',            ru: 'Аппаратный модуль безопасности для хранения ключей шифрования' },
+  { abbr: 'T60',      en: 'Reverberation Time (60 dB decay)',    ru: 'Время реверберации — за сколько секунд затухает эхо в комнате на 60 дБ' },
+  { abbr: 'BOM',      en: 'Bill of Materials',                   ru: 'Перечень компонентов и их стоимость для производства одного устройства' },
+  { abbr: 'WPA3',     en: 'Wi-Fi Protected Access 3',            ru: 'Современный протокол защиты WiFi-сети (2018+)' },
+  { abbr: 'DRC',      en: 'Dynamic Range Compression',           ru: 'Сжатие динамического диапазона — выравнивание громких и тихих звуков' },
+  { abbr: 'SPL',      en: 'Sound Pressure Level',                ru: 'Уровень звукового давления в дБ — объективная громкость звука' },
+  { abbr: 'IP54',     en: 'Ingress Protection 54',               ru: 'Степень защиты: пыль частично не проникает, защита от брызг воды' },
+  { abbr: 'ESD',      en: 'Electrostatic Discharge',             ru: 'Электростатический разряд — защита от статики при прикосновении' },
+  { abbr: 'ODM',      en: 'Original Design Manufacturer',        ru: 'Производитель, который разрабатывает и производит продукт под вашим брендом' },
+  { abbr: 'PoE',      en: 'Power over Ethernet',                 ru: 'Питание по кабелю Ethernet — один кабель для данных и электричества' },
+  { abbr: 'MVDR',     en: 'Minimum Variance Distortionless Response', ru: 'Алгоритм формирования направленного луча для микрофонного массива' },
+  { abbr: 'Presbycusis', en: 'Age-related hearing loss',         ru: 'Возрастная тугоухость — снижение слуха у пожилых, чаще на высоких частотах' },
+  { abbr: 'SRAM',     en: 'Static Random Access Memory',         ru: 'Статическая оперативная память — очень быстрая, но дорогая. Максимум 4 МБ чипом.' },
+  { abbr: 'DRAM',     en: 'Dynamic Random Access Memory',        ru: 'Динамическая оперативная память — стандартная DDR/LPDDR в смартфонах' },
+  { abbr: 'eMMC',     en: 'embedded MultiMediaCard',             ru: 'Встроенная флеш-память — стандарт хранения для встраиваемых систем' },
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+  const list = document.getElementById('glossary-list');
+  if (!list) return;
+  GLOSSARY.sort((a,b) => a.abbr.localeCompare(b.abbr));
+  GLOSSARY.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'glossary-item';
+    div.id = 'gterm-' + item.abbr.toUpperCase();
+    div.innerHTML = `
+      <div class="abbr">${item.abbr}</div>
+      <div class="en">${item.en}</div>
+      <div class="desc">${item.ru}</div>
+    `;
+    list.appendChild(div);
+  });
+});
+</script>
+</body>
+</html>
